@@ -1,12 +1,25 @@
 import express, { Express, Request, Response } from "express";
-
+import dotenv from "dotenv";
+import usersRouter from "./routes/userRouter";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import { logoutController } from "./controllers/authController";
+dotenv.config();
+mongoose
+  .connect(process.env.MONGODB_CONNECTION_STRING as string)
+  .then(() => console.log("Connected to database!"));
 const app: Express = express();
-const port = 3000;
-
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, TypeScript with Express!");
-});
-
+const port = process.env.PORT || 7000;
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use("/users", usersRouter);
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`[server]: Server is running at http://localhost:${port}`);
 });
