@@ -4,7 +4,6 @@ import usersRouter from "./routes/userRouter";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { logoutController } from "./controllers/authController";
 dotenv.config();
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING as string)
@@ -17,6 +16,14 @@ app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Cache-Control",
+      "Expires",
+      "Pragma",
+    ],
   })
 );
 app.use("/users", usersRouter);
