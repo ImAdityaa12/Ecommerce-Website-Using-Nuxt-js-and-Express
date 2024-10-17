@@ -28,7 +28,7 @@ app.use(
   })
 );
 app.use("/users", usersRouter);
-app.use("/admin", adminRouter);
+app.use("/admin/products", adminRouter);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
