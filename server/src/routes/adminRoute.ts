@@ -18,6 +18,6 @@ router.post(
 );
 router.get("/getProducts", getProductsController);
 router.post("/addNewProduct", addNewProductController);
-router.post("/deleteProduct", deleteProductController);
-router.post("/updateProduct", updateProductController);
+router.delete("/deleteProduct/:id", deleteProductController);
+router.put("/updateProduct/:id", updateProductController);
 export default router;

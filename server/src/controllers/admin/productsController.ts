@@ -66,7 +66,7 @@ export const addNewProductController = async (req: Request, res: Response) => {
 
 export const deleteProductController = async (req: Request, res: Response) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const product = await productModel.findByIdAndDelete(id);
     res.json({ product });
   } catch (error) {
@@ -78,7 +78,7 @@ export const deleteProductController = async (req: Request, res: Response) => {
 };
 export const updateProductController = async (req: Request, res: Response) => {
   try {
-    await productModel.findByIdAndUpdate(req.body.id, {
+    await productModel.findByIdAndUpdate(req.params.id, {
       ...req.body,
     });
     res.json({ message: "Product updated successfully" });
