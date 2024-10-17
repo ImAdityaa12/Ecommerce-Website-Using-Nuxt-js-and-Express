@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import usersRouter from "./routes/userRouter";
+import adminRouter from "./routes/adminRoute";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -27,6 +28,7 @@ app.use(
   })
 );
 app.use("/users", usersRouter);
+app.use("/admin", adminRouter);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

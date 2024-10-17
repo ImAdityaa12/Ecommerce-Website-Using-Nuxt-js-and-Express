@@ -1,24 +1,24 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-  fullname: String,
-  email: String,
-  password: String,
-  cart: {
-    type: Array,
-    default: [],
+  userName: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  isAdmin: Boolean,
-  order: {
-    type: Array,
-    default: [],
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  favItems: {
-    type: Array,
-    default: [],
+  password: {
+    type: String,
+    required: true,
   },
-  contact: Number,
-  picture: String,
+  role: {
+    type: String,
+    default: "user",
+  },
 });
 
 export default mongoose.model("User", userSchema);
