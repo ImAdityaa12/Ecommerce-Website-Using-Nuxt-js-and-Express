@@ -2,6 +2,7 @@ import express from "express";
 import {
   addNewProductController,
   deleteProductController,
+  getProductsController,
   handleImageUploadController,
   updateProductController,
 } from "../controllers/admin/productsController";
@@ -15,6 +16,7 @@ router.post(
   upload.single("image"),
   handleImageUploadController
 );
+router.get("/getProducts", getProductsController);
 router.post("/addNewProduct", addNewProductController);
 router.post("/deleteProduct", deleteProductController);
 router.post("/updateProduct", updateProductController);

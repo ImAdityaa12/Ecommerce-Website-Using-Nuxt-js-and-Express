@@ -2,6 +2,17 @@ import { Request, Response } from "express";
 import { imageUploadUtil } from "../../utils/cloudinary";
 import productModel from "../../models/productModel";
 
+export const getProductsController = async (req: Request, res: Response) => {
+  try {
+    const products = await productModel.find();
+    res.json({ products });
+  } catch (error: any) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching products" });
+  }
+};
 export const handleImageUploadController = async (
   req: Request,
   res: Response
