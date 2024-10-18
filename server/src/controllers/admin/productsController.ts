@@ -99,22 +99,27 @@ export const getFilteredProductsController = async (
     const brands = req.query.brands as string;
     const cleanCategory = category?.replace(/"/g, "");
     const cleanBrands = brands?.replace(/"/g, "");
-    console.log(cleanCategory, cleanBrands);
     if (!cleanCategory && !cleanBrands) {
-      const filteredProduct = await productModel.find({
-        category: { $regex: cleanCategory, $options: "i" },
-        $and: [{ brand: { $regex: cleanBrands, $options: "i" } }],
-      });
+      const filteredProduct = await productModel
+        .find({
+          category: { $regex: cleanCategory, $options: "i" },
+          $and: [{ brand: { $regex: cleanBrands, $options: "i" } }],
+        })
+        .sort({ price: 1 });
       res.json({ filteredProduct });
     } else if (cleanCategory && !cleanBrands) {
-      const filteredProduct = await productModel.find({
-        category: { $regex: cleanCategory, $options: "i" },
-      });
+      const filteredProduct = await productModel
+        .find({
+          category: { $regex: cleanCategory, $options: "i" },
+        })
+        .sort({ price: 1 });
       res.json({ filteredProduct });
     } else if (!cleanCategory && cleanBrands) {
-      const filteredProduct = await productModel.find({
-        brand: { $regex: cleanBrands, $options: "i" },
-      });
+      const filteredProduct = await productModel
+        .find({
+          brand: { $regex: cleanBrands, $options: "i" },
+        })
+        .sort({ price: 1 });
       res.json({ filteredProduct });
     }
   } catch (error) {
