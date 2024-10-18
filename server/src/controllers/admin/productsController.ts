@@ -89,3 +89,38 @@ export const updateProductController = async (req: Request, res: Response) => {
       .json({ message: "An error occurred while deleting the product" });
   }
 };
+
+export const getFilteredProductsController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const category = req.query.category as string;
+    const brands = req.query.brands as string;
+    const cleanCategory = category?.replace(/"/g, "");
+    const cleanBrands = brands?.replace(/"/g, "");
+    console.log(cleanCategory, cleanBrands);
+    if (!cleanCategory && !cleanBrands) {
+      const filteredProduct = await productModel.find({
+        category: { $regex: cleanCategory, $options: "i" },
+        $and: [{ brand: { $regex: cleanBrands, $options: "i" } }],
+      });
+      res.json({ filteredProduct });
+    } else if (cleanCategory && !cleanBrands) {
+      const filteredProduct = await productModel.find({
+        category: { $regex: cleanCategory, $options: "i" },
+      });
+      res.json({ filteredProduct });
+    } else if (!cleanCategory && cleanBrands) {
+      const filteredProduct = await productModel.find({
+        brand: { $regex: cleanBrands, $options: "i" },
+      });
+      res.json({ filteredProduct });
+    }
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching products" });
+  }
+};

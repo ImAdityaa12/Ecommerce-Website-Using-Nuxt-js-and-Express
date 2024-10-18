@@ -2,6 +2,7 @@ import express from "express";
 import {
   addNewProductController,
   deleteProductController,
+  getFilteredProductsController,
   getProductsController,
   handleImageUploadController,
   updateProductController,
@@ -20,4 +21,5 @@ router.get("/getProducts", getProductsController);
 router.post("/addNewProduct", addNewProductController);
 router.delete("/deleteProduct/:id", deleteProductController);
 router.put("/updateProduct/:id", updateProductController);
+router.get("/filter", getFilteredProductsController);
 export default router;
