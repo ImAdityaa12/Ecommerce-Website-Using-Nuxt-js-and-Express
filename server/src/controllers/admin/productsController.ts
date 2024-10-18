@@ -129,3 +129,18 @@ export const getFilteredProductsController = async (
       .json({ message: "An error occurred while fetching products" });
   }
 };
+
+export const getProductDetailsController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const id = req.query.id;
+    const product = await productModel.findById(id);
+    res.json({ product });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching products" });
+  }
+};

@@ -3,6 +3,7 @@ import {
   addNewProductController,
   deleteProductController,
   getFilteredProductsController,
+  getProductDetailsController,
   getProductsController,
   handleImageUploadController,
   updateProductController,
@@ -22,4 +23,5 @@ router.post("/addNewProduct", addNewProductController);
 router.delete("/deleteProduct/:id", deleteProductController);
 router.put("/updateProduct/:id", updateProductController);
 router.get("/filter", getFilteredProductsController);
+router.get("/detail", getProductDetailsController);
 export default router;
