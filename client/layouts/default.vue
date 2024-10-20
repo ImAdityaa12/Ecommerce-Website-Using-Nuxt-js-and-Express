@@ -1,6 +1,5 @@
 <template>
   <div>
-    Hello
     <Toaster />
     <slot />
   </div>
