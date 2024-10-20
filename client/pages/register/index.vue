@@ -8,7 +8,7 @@
         >
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="registerUser" class="space-y-4">
+        <form class="space-y-4">
           <div class="space-y-2">
             <Label for="username">Username</Label>
             <Input
@@ -36,10 +36,22 @@
               placeholder="Enter your password"
             />
           </div>
-          <Button class="w-full">Register</Button>
+          <Button
+            class="w-full"
+            @click="
+              (e) => {
+                e.preventDefault();
+
+                toast({
+                  title: 'Scheduled: Catch up',
+                  description: 'Friday, February 10, 2023 at 5:57 PM',
+                });
+              }
+            "
+            >Register</Button
+          >
         </form>
       </CardContent>
-      <Toaster />
     </Card>
   </div>
 </template>
@@ -53,8 +65,7 @@ import CardTitle from "~/components/ui/card/CardTitle.vue";
 import Input from "~/components/ui/input/Input.vue";
 import Label from "~/components/ui/label/Label.vue";
 import Button from "~/components/ui/button/Button.vue";
-import { useToast } from "../../components/ui/toast/use-toast";
-import { Toaster } from "../../components/ui/toast";
+import { useToast } from "@/components/ui/toast/use-toast";
 import { ref } from "vue";
 
 const { toast } = useToast();

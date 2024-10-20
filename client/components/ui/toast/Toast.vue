@@ -1,98 +1,28 @@
-<template>
-  <div class="min-h-screen flex items-center justify-center bg-background p-4">
-    <Card class="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription
-          >Enter your details below to create your account</CardDescription
-        >
-      </CardHeader>
-      <CardContent>
-        <form @submit.prevent="registerUser" class="space-y-4">
-          <div class="space-y-2">
-            <Label for="username">Username</Label>
-            <Input
-              id="username"
-              v-model="formData.username"
-              type="text"
-              placeholder="Enter your username"
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="email">Email</Label>
-            <Input
-              id="email"
-              v-model="formData.email"
-              type="email"
-              placeholder="Enter your email"
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="password">Password</Label>
-            <Input
-              id="password"
-              v-model="formData.password"
-              type="password"
-              placeholder="Enter your password"
-            />
-          </div>
-          <Button @click="registerUser" class="w-full">Register</Button>
-        </form>
-      </CardContent>
-    </Card>
-  </div>
-</template>
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+import { ToastRoot, type ToastRootEmits, useForwardPropsEmits } from 'radix-vue'
+import { computed } from 'vue'
+import { type ToastProps, toastVariants } from '.'
 
-<script setup>
-import { ref } from "vue";
-import Card from "~/components/ui/card/Card.vue";
-import CardContent from "~/components/ui/card/CardContent.vue";
-import CardDescription from "~/components/ui/card/CardDescription.vue";
-import CardHeader from "~/components/ui/card/CardHeader.vue";
-import CardTitle from "~/components/ui/card/CardTitle.vue";
-import Input from "~/components/ui/input/Input.vue";
-import Label from "~/components/ui/label/Label.vue";
-import Button from "~/components/ui/button/Button.vue";
-import { useToast } from "~/components/ui/toast";
+const props = defineProps<ToastProps>()
 
-const { toast } = useToast();
+const emits = defineEmits<ToastRootEmits>()
 
-const formData = ref({
-  username: "",
-  email: "",
-  password: "",
-});
+const delegatedProps = computed(() => {
+  const { class: _, ...delegated } = props
 
-const registerUser = async () => {
-  try {
-    const res = await fetch(`http://localhost:7000/users/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName: formData.value.username,
-        email: formData.value.email,
-        password: formData.value.password,
-      }),
-    });
+  return delegated
+})
 
-    if (res.ok) {
-      toast({
-        title: "Success",
-        description: "Registration successful",
-        duration: 5000,
-      });
-    } else {
-      throw new Error("Registration failed");
-    }
-  } catch (error) {
-    toast({
-      variant: "destructive",
-      title: "Error",
-      description: "An error occurred during registration",
-      duration: 5000,
-    });
-  }
-};
+const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
+
+<template>
+  <ToastRoot
+    v-bind="forwarded"
+    :class="cn(toastVariants({ variant }), props.class)"
+    @update:open="onOpenChange"
+  >
+    <slot />
+  </ToastRoot>
+</template>
