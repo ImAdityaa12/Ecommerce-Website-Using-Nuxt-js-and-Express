@@ -36,15 +36,15 @@
               placeholder="Enter your password"
             />
           </div>
-          <Button class="w-full">Register</Button>
+          <Button @click="registerUser" class="w-full">Register</Button>
         </form>
       </CardContent>
-      <Toaster />
     </Card>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import Card from "~/components/ui/card/Card.vue";
 import CardContent from "~/components/ui/card/CardContent.vue";
 import CardDescription from "~/components/ui/card/CardDescription.vue";
@@ -53,9 +53,7 @@ import CardTitle from "~/components/ui/card/CardTitle.vue";
 import Input from "~/components/ui/input/Input.vue";
 import Label from "~/components/ui/label/Label.vue";
 import Button from "~/components/ui/button/Button.vue";
-import { useToast } from "../../components/ui/toast/use-toast";
-import { Toaster } from "../../components/ui/toast";
-import { ref } from "vue";
+import { useToast } from "~/components/ui/toast";
 
 const { toast } = useToast();
 
@@ -79,11 +77,15 @@ const registerUser = async () => {
       }),
     });
 
-    toast({
-      title: "Success",
-      description: "Registration successful",
-      duration: 5000,
-    });
+    if (res.ok) {
+      toast({
+        title: "Success",
+        description: "Registration successful",
+        duration: 5000,
+      });
+    } else {
+      throw new Error("Registration failed");
+    }
   } catch (error) {
     toast({
       variant: "destructive",
@@ -94,5 +96,3 @@ const registerUser = async () => {
   }
 };
 </script>
-
-<style></style>
