@@ -39,11 +39,20 @@ export const addToCartController = async (req: Request, res: Response) => {
 export const fetchCartController = async (req: Request, res: Response) => {
   try {
     const cart = await cartModel.findOne({ userId: req.query.userId });
+    const allPrducts = await productModel.find();
     if (!cart) {
       res.status(404).send("Cart not found please add some items to cart");
       return;
     }
-    res.status(200).json(cart);
+    const validProducts = cart.items.filter((item) =>
+      allPrducts.some(
+        (product) => product._id.toString() === item.productId.toString()
+      )
+    );
+    res.status(200).json({
+      items: validProducts,
+      userId: req.query.userId,
+    });
     return;
   } catch (error) {
     console.error(error);
