@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import cartModel from "../models/cartModel";
 import productModel from "../models/productModel";
-import console from "console";
 export const addToCartController = async (req: Request, res: Response) => {
   try {
     const { userId, productId, quantity } = req.body;
@@ -31,6 +30,21 @@ export const addToCartController = async (req: Request, res: Response) => {
     }
     await cart.save();
     res.status(201).json(cart);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+};
+
+export const fetchCartController = async (req: Request, res: Response) => {
+  try {
+    const cart = await cartModel.findOne({ userId: req.query.userId });
+    if (!cart) {
+      res.status(404).send("Cart not found please add some items to cart");
+      return;
+    }
+    res.status(200).json(cart);
+    return;
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred");
