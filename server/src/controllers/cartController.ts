@@ -146,7 +146,7 @@ export const updateCartItemQuantityController = async (
       res.status(200).json(cart);
     }
   } catch (error) {
-    // console.error(error);`
+    console.error(error);
     res.status(500).send("An error occurred");
   }
 };
