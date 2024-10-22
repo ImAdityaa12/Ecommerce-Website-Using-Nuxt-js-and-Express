@@ -5,22 +5,18 @@
 </template>
 <script setup>
 import { useStore } from "~/stores/store";
+
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import { useToast } from "~/components/ui/toast/use-toast";
 import { getCookie } from "../lib/utils.ts";
-import { deleteCookie } from "../lib/utils.ts";
-const cookie = getCookie("token");
-
 const authStore = useStore();
 const { toast } = useToast();
 const router = useRouter();
-console.log(authStore.isAuthenticated);
 
 onMounted(() => {
-  if (!cookie) {
-    router.push("/");
-  }
+  const token = getCookie("token");
+  console.log(token);
 });
 
 const handleLogout = async () => {

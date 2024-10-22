@@ -46,11 +46,7 @@ export const loginController = async (req: Request, res: Response) => {
     }
 
     const token = generateToken(email, user);
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-    });
+    res.cookie("token", token);
 
     res.status(200).json({ message: "Logged in successfully" });
   } catch (error) {
