@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import cartModel from "../models/cartModel";
 import productModel from "../models/productModel";
 import { Types } from "mongoose";
+import userModel from "../models/userModel";
 interface IProduct {
   _id: Types.ObjectId;
   image: string;
@@ -10,16 +11,12 @@ interface IProduct {
   salePrice: number;
 }
 
-// Interface for Cart Item
 interface ICartItem {
   productId: IProduct;
   quantity: number;
   _id: Types.ObjectId;
 }
 
-// Interface for Cart Document
-
-// Interface for transformed cart item
 interface TransformedCartItem {
   productId: Types.ObjectId;
   title: string;
@@ -29,7 +26,6 @@ interface TransformedCartItem {
   quantity: number;
 }
 
-// Interface for the response data
 interface CartResponse {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
@@ -147,6 +143,43 @@ export const updateCartItemQuantityController = async (
     }
   } catch (error) {
     console.error(error);
+    res.status(500).send("An error occurred");
+  }
+};
+
+export const deleteCartItemController = async (req: Request, res: Response) => {
+  try {
+    const { email, productId } = req.body;
+
+    if (!email || !productId) {
+      res.status(400).send("Missing required fields");
+      return;
+    }
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      res.status(400).send("User not found in database");
+    }
+
+    const cart = await cartModel.findOne({ userId: user?._id });
+    if (!cart) {
+      res.status(400).send("Cart not found in database");
+      return;
+    }
+
+    const findCurrentProductIndex = cart.items.findIndex(
+      (item) => item.productId.toString() === productId
+    );
+
+    if (findCurrentProductIndex === -1) {
+      res.status(400).send("Product not found in cart");
+      return;
+    } else {
+      cart.items.splice(findCurrentProductIndex, 1);
+      await cart.save();
+      res.status(200).json(cart);
+    }
+  } catch (error) {
+    console.log(error);
     res.status(500).send("An error occurred");
   }
 };
