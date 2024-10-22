@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import usersRouter from "./routes/userRouter";
 import adminRouter from "./routes/adminRoute";
 import cartRouter from "./routes/cartRouter";
+import productsRoute from "./routes/productsRoute";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -30,6 +31,7 @@ app.use(
 );
 app.use("/users", usersRouter);
 app.use("/admin/products", adminRouter);
+app.use("/products/shop", productsRoute);
 app.use("/user/cart", cartRouter);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
