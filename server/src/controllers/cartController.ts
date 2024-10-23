@@ -36,12 +36,12 @@ export const addToCartController = async (req: Request, res: Response) => {
   try {
     const { userId, productId, quantity } = req.body;
     if (!userId || !productId || !quantity) {
-      res.status(400).send("Missing required fields");
+      res.status(400).json("Missing required fields");
       return;
     }
     const product = await productModel.findById(productId);
     if (!product) {
-      res.status(400).send("Product not found in databse");
+      res.status(400).json("Product not found in databse");
       return;
     }
     let cart = await cartModel.findOne({ userId });
@@ -63,7 +63,7 @@ export const addToCartController = async (req: Request, res: Response) => {
     res.status(201).json(cart);
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred");
+    res.status(500).json("An error occurred");
   }
 };
 
@@ -80,7 +80,7 @@ export const fetchCartController = async (
       });
 
     if (!cart) {
-      res.status(400).send("Cart not found in database");
+      res.status(400).json("Cart not found in database");
       return;
     }
 
@@ -102,7 +102,7 @@ export const fetchCartController = async (
     res.status(200).json(response);
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred");
+    res.status(500).json("An error occurred");
   }
 };
 
@@ -113,13 +113,13 @@ export const updateCartItemQuantityController = async (
   try {
     const { userId, productId, quantity } = req.body;
     if (!userId || !productId || !quantity) {
-      res.status(400).send("Missing required fields");
+      res.status(400).json("Missing required fields");
       return;
     }
 
     const cart = await cartModel.findOne({ userId });
     if (!cart) {
-      res.status(400).send("Cart not found in database");
+      res.status(400).json("Cart not found in database");
       return;
     }
 
@@ -127,7 +127,7 @@ export const updateCartItemQuantityController = async (
       (item) => item.productId.toString() === productId
     );
     if (findCurrentProductIndex === -1) {
-      res.status(400).send("Product not found in cart");
+      res.status(400).json("Product not found in cart");
       return;
     } else {
       if (quantity === "plus") {
@@ -143,7 +143,7 @@ export const updateCartItemQuantityController = async (
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send("An error occurred");
+    res.status(500).json("An error occurred");
   }
 };
 
@@ -152,17 +152,17 @@ export const deleteCartItemController = async (req: Request, res: Response) => {
     const { email, productId } = req.body;
 
     if (!email || !productId) {
-      res.status(400).send("Missing required fields");
+      res.status(400).json("Missing required fields");
       return;
     }
     const user = await userModel.findOne({ email });
     if (!user) {
-      res.status(400).send("User not found in database");
+      res.status(400).json("User not found in database");
     }
 
     const cart = await cartModel.findOne({ userId: user?._id });
     if (!cart) {
-      res.status(400).send("Cart not found in database");
+      res.status(400).json("Cart not found in database");
       return;
     }
 
@@ -171,7 +171,7 @@ export const deleteCartItemController = async (req: Request, res: Response) => {
     );
 
     if (findCurrentProductIndex === -1) {
-      res.status(400).send("Product not found in cart");
+      res.status(400).json("Product not found in cart");
       return;
     } else {
       cart.items.splice(findCurrentProductIndex, 1);
@@ -180,6 +180,6 @@ export const deleteCartItemController = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).send("An error occurred");
+    res.status(500).json("An error occurred");
   }
 };
