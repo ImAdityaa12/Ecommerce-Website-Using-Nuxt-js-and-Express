@@ -1,7 +1,10 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 import usersRouter from "./routes/userRouter";
 import adminRouter from "./routes/adminRoute";
+import cartRouter from "./routes/cartRouter";
+import productsRoute from "./routes/productsRoute";
+import addressRoute from "./routes/addressRoute";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -29,6 +32,9 @@ app.use(
 );
 app.use("/users", usersRouter);
 app.use("/admin/products", adminRouter);
+app.use("/products/shop", productsRoute);
+app.use("/user/cart", cartRouter);
+app.use("/users/address", addressRoute);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
