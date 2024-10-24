@@ -49,12 +49,20 @@ import { useToast } from "@/components/ui/toast/use-toast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "~/stores/store";
+import { getCookie } from "~/lib/utils";
 
 const authStore = useStore();
 const { toast } = useToast();
 const router = useRouter();
 
 console.log(authStore.isAuthenticated);
+
+onMounted(() => {
+  const cookie = getCookie("token");
+  if (cookie) {
+    router.push("/");
+  }
+});
 
 const formData = ref({
   email: "",

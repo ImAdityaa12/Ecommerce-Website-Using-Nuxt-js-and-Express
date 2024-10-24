@@ -55,9 +55,16 @@ import Button from "~/components/ui/button/Button.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { getCookie } from "~/lib/utils";
 
 const { toast } = useToast();
 const router = useRouter();
+onMounted(() => {
+  const cookie = getCookie("token");
+  if (cookie) {
+    router.push("/login");
+  }
+});
 
 const formData = ref({
   username: "",
@@ -86,9 +93,8 @@ const registerUser = async (e) => {
       description: "Registration successful",
       duration: 5000,
     });
-    if (res.ok) {
-      router.push("/login");
-    }
+
+    router.push("/login");
   } catch (error) {
     toast({
       variant: "destructive",

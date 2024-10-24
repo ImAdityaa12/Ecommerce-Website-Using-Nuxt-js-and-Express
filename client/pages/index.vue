@@ -1,7 +1,5 @@
 <template>
-  <div class="" v-if="authStore.isAuthenticated" @click="handleLogout">
-    Logout
-  </div>
+  <div class="" @click="handleLogout">Logout</div>
 </template>
 <script setup>
 import { useStore } from "~/stores/store";
@@ -10,19 +8,25 @@ import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import { useToast } from "~/components/ui/toast/use-toast";
 import { getCookie } from "../lib/utils.ts";
+
 const authStore = useStore();
 const { toast } = useToast();
 const router = useRouter();
 
 onMounted(() => {
-  const token = getCookie("token");
-  console.log(token);
+  const cookie = getCookie("token");
+  console.log(cookie);
+  if (cookie) {
+    router.push("/");
+  } else {
+    router.push("/login");
+  }
 });
 
 const handleLogout = async () => {
   try {
     const res = await fetch("http://localhost:7000/users/logout", {
-      method: "POST",
+      method: "GET",
       credentials: "include",
     });
 

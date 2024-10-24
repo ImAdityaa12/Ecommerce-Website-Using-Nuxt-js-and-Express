@@ -15,8 +15,9 @@ export const registerController = async (req: Request, res: Response) => {
     const hash = await bcrypt.hash(password, salt);
     const user = await userModel.create({ userName, email, password: hash });
     const token = generateToken(email, user);
-    res.cookie("token", token);
-    res.status(201).json("User created successfully");
+    res.cookie
+    ("token", token);
+    res.status(201).json({message: "User created successfully", user});
   } catch (error) {
     console.error(error);
     res.status(500).send("An error occurred while creating the user.");
@@ -48,7 +49,7 @@ export const loginController = async (req: Request, res: Response) => {
     const token = generateToken(email, user);
     res.cookie("token", token);
 
-    res.status(200).json({ message: "Logged in successfully" });
+    res.status(200).json({ message: "Logged in successfully", user });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "An error occurred while logging in" });
