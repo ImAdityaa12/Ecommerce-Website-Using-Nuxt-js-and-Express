@@ -5,6 +5,7 @@ import adminRouter from "./routes/adminRoute";
 import cartRouter from "./routes/cartRouter";
 import productsRoute from "./routes/productsRoute";
 import addressRoute from "./routes/addressRoute";
+import orderRouter from "./routes/orderRoutes";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -35,6 +36,7 @@ app.use("/admin/products", adminRouter);
 app.use("/products/shop", productsRoute);
 app.use("/user/cart", cartRouter);
 app.use("/users/address", addressRoute);
+app.use("/user/order", orderRouter);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });

@@ -8,7 +8,6 @@ const orderSchema = new mongoose.Schema({
       title: String,
       image: String,
       price: String,
-      salePrice: String,
       quantity: Number,
     },
   ],
@@ -26,6 +25,7 @@ const orderSchema = new mongoose.Schema({
   totalAmount: Number,
   orderDate: Date,
   orderUpdateDate: Date,
+  cartId: String,
   paymentId: String,
   payerId: String,
 });
