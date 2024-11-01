@@ -9,6 +9,7 @@ import {
   updateProductController,
 } from "../controllers/admin/productsController";
 import { upload } from "../utils/cloudinary";
+import { updateOrderStatus } from "../controllers/orderController";
 const router = express.Router();
 router.get("/", async (req, res) => {
   res.json("admin route");
@@ -24,4 +25,5 @@ router.delete("/deleteProduct/:id", deleteProductController);
 router.put("/updateProduct/:id", updateProductController);
 router.get("/filter", getFilteredProductsController);
 router.get("/detail", getProductDetailsController);
+router.post("order/update", updateOrderStatus);
 export default router;

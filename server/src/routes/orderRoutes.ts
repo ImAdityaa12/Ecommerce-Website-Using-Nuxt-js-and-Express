@@ -7,5 +7,5 @@ import {
 const router = express.Router();
 router.post("/create", createOrder);
 router.post("/capture", capturePayment);
-router.post("update/OrderStatus", updateOrderStatus);
+// router.post("update/OrderStatus", updateOrderStatus);
 export default router;
