@@ -8,7 +8,7 @@ export const registerController = async (req: Request, res: Response) => {
     const { userName, email, password } = req.body;
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      res.status(400).json("User already exists");
+      res.status(400).json({ message: "User already exists" });
       return;
     }
     const salt = await bcrypt.genSalt(10);
@@ -16,10 +16,12 @@ export const registerController = async (req: Request, res: Response) => {
     const user = await userModel.create({ userName, email, password: hash });
     const token = generateToken(email, user);
     res.cookie("token", token);
-    res.status(201).json("User created successfully");
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json("An error occurred while creating the user.");
+    res
+      .status(500)
+      .json({ message: "An error occurred while creating the user." });
   }
 };
 export const loginController = async (req: Request, res: Response) => {

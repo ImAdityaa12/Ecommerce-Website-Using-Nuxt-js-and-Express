@@ -14,20 +14,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Github, Loader, LogIn } from "lucide-react";
+import { Eye, EyeOff, Github, Loader, LogIn } from "lucide-react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [formData, setFormData] = useState<{
+    email: string;
+    password: string;
+  }>({
+    email: "",
+    password: "",
+  });
   const router = useRouter();
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-
-    setTimeout(() => {
+    const response = await fetch("http://localhost:7000/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      toast.success(data?.message);
       setIsLoading(false);
       router.push("/dashboard");
-    }, 3000);
+    } else {
+      setIsLoading(false);
+      toast.error(data?.message);
+    }
   }
 
   return (
@@ -71,11 +95,29 @@ export default function LoginPage() {
                 autoComplete="email"
                 autoCorrect="off"
                 disabled={isLoading}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
             <div className="grid gap-2 mt-4">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" disabled={isLoading} />
+              <div className="flex items-center gap-2">
+                <Input
+                  id="password"
+                  type={visible ? "text" : "password"}
+                  disabled={isLoading}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                <span
+                  className="text-muted-foreground cursor-pointer"
+                  onClick={() => setVisible(!visible)}
+                >
+                  {visible ? <Eye /> : <EyeOff />}
+                </span>
+              </div>
             </div>
             <Button className="w-full mt-4" type="submit" disabled={isLoading}>
               {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
