@@ -1,0 +1,57 @@
+import Image from "next/image";
+import { Heart, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { product } from "@/product";
+
+export default function ProductCard({ product }: { product: product }) {
+  return (
+    <Card className="flex flex-col max-w-[350px] max-h-[570px]">
+      <CardHeader className="p-0">
+        <div className="relative aspect-square">
+          <Image
+            src={product.image}
+            alt={product.title}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-t-lg"
+          />
+          <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
+            <Heart className="w-5 h-5 text-gray-600" />
+            <span className="sr-only">Add to favorites</span>
+          </button>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-grow p-4">
+        <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
+        <div className="flex justify-between items-center mb-2">
+          <div>
+            <span className="text-lg font-bold">${product.salePrice}</span>
+            {product.salePrice < product.price && (
+              <span className="text-sm text-gray-500 line-through ml-2">
+                ${product.price}
+              </span>
+            )}
+          </div>
+          <Badge variant="secondary">{product.category}</Badge>
+        </div>
+        <div className="text-sm text-gray-600 mb-2">Brand: {product.brand}</div>
+        <div className="text-sm text-gray-600">
+          In Stock: {product.totalStock}
+        </div>
+      </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <Button className="w-full">
+          <ShoppingCart className="w-4 h-4 mr-2" />
+          Add to Cart
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
