@@ -24,7 +24,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Redirect logic for login page when user is already authenticated
-  if (isPublicPath && token) {
+  if (isPublicPath && token && path !== "/") {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
