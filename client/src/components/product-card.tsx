@@ -11,6 +11,7 @@ import {
 import { product } from "@/product";
 
 export default function ProductCard({ product }: { product: product }) {
+  const categories = product.category.split(",");
   return (
     <Card className="flex flex-col max-w-[350px] max-h-[570px]">
       <CardHeader className="p-0">
@@ -39,7 +40,14 @@ export default function ProductCard({ product }: { product: product }) {
               </span>
             )}
           </div>
-          <Badge variant="secondary">{product.category}</Badge>
+          <div className="flex gap-2">
+            {categories.map((category, index) => (
+              <Badge key={index} variant="secondary">
+                {category}
+              </Badge>
+            ))}
+          </div>
+          {/* <Badge variant="secondary">{product.category}</Badge> */}
         </div>
         <div className="text-sm text-gray-600 mb-2">Brand: {product.brand}</div>
         <div className="text-sm text-gray-600">
