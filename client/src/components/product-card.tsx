@@ -19,9 +19,9 @@ export default function ProductCard({ product }: { product: product }) {
           <Image
             src={product.image}
             alt={product.title}
-            layout="fill"
-            objectFit="cover"
-            className="rounded-t-lg"
+            fill
+            // objectFit="cover"
+            className="rounded-t-lg object-cover"
           />
           <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
             <Heart className="w-5 h-5 text-gray-600" />

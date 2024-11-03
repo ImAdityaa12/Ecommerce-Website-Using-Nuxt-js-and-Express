@@ -9,7 +9,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  TooltipProvider
+  TooltipProvider,
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -18,10 +18,41 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCookie } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export function UserNav() {
+  const [userDetails, setUserDetails] = useState<{
+    name: string;
+    email: string;
+    image?: string;
+    role: string;
+  }>({
+    name: "",
+    email: "",
+    role: "",
+  });
+  const getUserDetails = async () => {
+    const token = getCookie("token");
+    const response = await fetch("http://localhost:7000/users/details", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      setUserDetails(data);
+    } else {
+      toast.error("Failed to fetch");
+    }
+  };
+  useEffect(() => {
+    getUserDetails();
+  }, []);
   return (
     <DropdownMenu>
       <TooltipProvider disableHoverableContent>
@@ -34,7 +65,9 @@ export function UserNav() {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="#" alt="Avatar" />
-                  <AvatarFallback className="bg-transparent">JD</AvatarFallback>
+                  <AvatarFallback className="bg-transparent">
+                    {userDetails.name.charAt(0)}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -46,9 +79,11 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">John Doe</p>
+            <p className="text-sm font-medium leading-none">
+              {userDetails.name}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
-              johndoe@example.com
+              {userDetails.email}
             </p>
           </div>
         </DropdownMenuLabel>
