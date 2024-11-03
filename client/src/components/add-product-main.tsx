@@ -281,7 +281,9 @@ export default function AddProductMain() {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={image !== null}>
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>

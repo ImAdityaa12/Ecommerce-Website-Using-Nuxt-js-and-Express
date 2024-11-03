@@ -21,20 +21,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getCookie } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
+import { useStore } from "zustand";
+import userDetailsStore from "@/store/userDetail";
 
 export function UserNav() {
-  const [userDetails, setUserDetails] = useState<{
-    name: string;
-    email: string;
-    image?: string;
-    role: string;
-  }>({
-    name: "",
-    email: "",
-    role: "",
-  });
+  const { userDetails, setUserDetails } = useStore(userDetailsStore);
   const getUserDetails = async () => {
     const token = getCookie("token");
     const response = await fetch("http://localhost:7000/users/details", {

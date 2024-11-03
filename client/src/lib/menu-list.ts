@@ -55,16 +55,16 @@ export function getMenuList(pathname: string): Group[] {
               label: "Add Product",
             },
             {
-              href: "/update-product",
-              label: "Update Product",
-            },
-            {
-              href: "/delete-product",
-              label: "Delete Product",
+              href: "/manage-product",
+              label: "Manage Product",
             },
             {
               href: "/orders",
               label: "Orders",
+            },
+            {
+              href: "/users",
+              label: "Users",
             },
           ],
         },
@@ -74,8 +74,8 @@ export function getMenuList(pathname: string): Group[] {
           icon: Bookmark,
         },
         {
-          href: "/tags",
-          label: "Tags",
+          href: "/favorites",
+          label: "Saved",
           icon: Tag,
         },
       ],
