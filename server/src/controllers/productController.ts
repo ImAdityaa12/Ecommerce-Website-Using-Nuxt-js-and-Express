@@ -10,7 +10,6 @@ export const getAllProductsController = async (req: Request, res: Response) => {
     if (!cleanCategory && !cleanBrands) {
       const allProduct = await productModel.find().sort({ price: 1 });
       res.status(200).json(allProduct);
-      console.log(allProduct);
       return;
     } else if (cleanCategory && !cleanBrands) {
       const filteredProduct = await productModel
