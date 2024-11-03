@@ -92,11 +92,11 @@ export default function CommandSearch() {
     <div className="w-full ml-auto">
       <Button
         onClick={() => setOpen(true)}
-        className="relative max-w-[20rem] lg:min-w-[20rem] justify-start text-sm text-muted-foreground flex items-center text-white ml-auto"
+        className="relative max-w-[20rem] lg:min-w-[20rem] justify-start text-sm text-muted-foreground flex items-center text-white ml-auto dark:bg-gray-900 border-2 hover:bg-transparent hover:text-blue-400 border-blue-400 dark:border-gray-900 dark:hover:bg-gray-800 dark:focus:bg-gray-800 group"
       >
         Search
         <span className="w-full">
-          <Search className="text-white ml-auto" />
+          <Search className="text-white ml-auto group-hover:text-blue-400" />
         </span>
       </Button>
       {/* <CommandDialog open={open} onOpenChange={setOpen}>
