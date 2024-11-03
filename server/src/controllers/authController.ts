@@ -5,7 +5,7 @@ import { generateToken } from "../utils/generateToken";
 import jwt from "jsonwebtoken";
 export const registerController = async (req: Request, res: Response) => {
   try {
-    const { userName, email, password } = req.body;
+    const { name, userName, email, password, phoneNumber, image } = req.body;
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: "User already exists" });
@@ -13,7 +13,14 @@ export const registerController = async (req: Request, res: Response) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
-    const user = await userModel.create({ userName, email, password: hash });
+    const user = await userModel.create({
+      userName,
+      email,
+      password: hash,
+      name,
+      phoneNumber,
+      image,
+    });
     const token = generateToken(email, user);
     res.cookie("token", token);
     res.status(201).json({ message: "User created successfully" });
@@ -92,10 +99,13 @@ export const userDetailsController = async (
     }
 
     res.status(200).json({
-      name: user.userName,
+      name: user.name,
       email: user.email,
       image: user.image,
+      phoneNumber: user.phoneNumber,
+      userName: user.userName,
       role: user.role,
+      _id: user._id,
     });
   } catch (error) {
     console.error(error);

@@ -5,6 +5,8 @@ type UserDetails = {
   email: string;
   image?: string;
   role: string;
+  phoneNumber: string;
+  userName: string;
 };
 
 type UserStore = {
@@ -21,6 +23,8 @@ const userDetailsStore = create<UserStore>((set) => ({
     name: "",
     email: "",
     role: "",
+    phoneNumber: "",
+    userName: "",
   },
   setUserDetails: (details) => set({ userDetails: details }),
   updateUserField: (key, value) =>

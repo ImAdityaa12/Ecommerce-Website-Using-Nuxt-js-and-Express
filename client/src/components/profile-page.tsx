@@ -44,7 +44,7 @@ export default function ProfilePage() {
         </Avatar>
         <div>
           <CardTitle className="text-3xl">{userDetails.name}</CardTitle>
-          <p className="text-muted-foreground">@{userDetails.name}</p>
+          <p className="text-muted-foreground">@{userDetails.userName}</p>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -56,7 +56,7 @@ export default function ProfilePage() {
                 <dt className="text-sm font-medium text-muted-foreground">
                   Username
                 </dt>
-                <dd className="text-sm">{userDetails.name}</dd>
+                <dd className="text-sm">{userDetails.userName}</dd>
               </div>
               <div>
                 <dt className="text-sm font-medium text-muted-foreground">
@@ -68,7 +68,7 @@ export default function ProfilePage() {
                 <dt className="text-sm font-medium text-muted-foreground">
                   Phone Number
                 </dt>
-                <dd className="text-sm">{user.phoneNumber}</dd>
+                <dd className="text-sm">{userDetails.phoneNumber}</dd>
               </div>
             </dl>
           </div>
