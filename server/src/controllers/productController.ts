@@ -8,13 +8,9 @@ export const getAllProductsController = async (req: Request, res: Response) => {
     const cleanCategory = category?.replace(/"/g, "");
     const cleanBrands = brands?.replace(/"/g, "");
     if (!cleanCategory && !cleanBrands) {
-      const filteredProduct = await productModel
-        .find({
-          category: { $regex: cleanCategory, $options: "i" },
-          $and: [{ brand: { $regex: cleanBrands, $options: "i" } }],
-        })
-        .sort({ price: 1 });
-      res.json({ filteredProduct });
+      const allProduct = await productModel.find().sort({ price: 1 });
+      res.status(200).json(allProduct);
+      return;
     } else if (cleanCategory && !cleanBrands) {
       const filteredProduct = await productModel
         .find({
