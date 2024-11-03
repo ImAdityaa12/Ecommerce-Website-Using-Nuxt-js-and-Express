@@ -3,9 +3,9 @@ import {
   Users,
   Settings,
   Bookmark,
-  SquarePen,
   LayoutGrid,
-  LucideIcon
+  LucideIcon,
+  Crown,
 } from "lucide-react";
 
 type Submenu = {
@@ -27,6 +27,8 @@ type Group = {
   menus: Menu[];
 };
 
+//@eslint-disable-next-line
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function getMenuList(pathname: string): Group[] {
   return [
     {
@@ -36,39 +38,47 @@ export function getMenuList(pathname: string): Group[] {
           href: "/dashboard",
           label: "Dashboard",
           icon: LayoutGrid,
-          submenus: []
-        }
-      ]
+          submenus: [],
+        },
+      ],
     },
     {
       groupLabel: "Contents",
       menus: [
         {
           href: "",
-          label: "Posts",
-          icon: SquarePen,
+          label: "Admin",
+          icon: Crown,
           submenus: [
             {
-              href: "/posts",
-              label: "All Posts"
+              href: "/add-product",
+              label: "Add Product",
             },
             {
-              href: "/posts/new",
-              label: "New Post"
-            }
-          ]
+              href: "/update-product",
+              label: "Update Product",
+            },
+            {
+              href: "/delete-product",
+              label: "Delete Product",
+            },
+            {
+              href: "/orders",
+              label: "Orders",
+            },
+          ],
         },
         {
           href: "/categories",
           label: "Categories",
-          icon: Bookmark
+          icon: Bookmark,
         },
         {
           href: "/tags",
           label: "Tags",
-          icon: Tag
-        }
-      ]
+          icon: Tag,
+        },
+      ],
     },
     {
       groupLabel: "Settings",
@@ -76,14 +86,14 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "/users",
           label: "Users",
-          icon: Users
+          icon: Users,
         },
         {
           href: "/account",
           label: "Account",
-          icon: Settings
-        }
-      ]
-    }
+          icon: Settings,
+        },
+      ],
+    },
   ];
 }
