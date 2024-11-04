@@ -7,6 +7,6 @@ import {
 const router = express.Router();
 router.get("/", getAllProductsController);
 router.get("/product/:id", getProductDetailsController);
-router.post("/save/:id", saveProductController);
+router.get("/save/:id", saveProductController);
 
 export default router;

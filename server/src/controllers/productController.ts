@@ -65,15 +65,10 @@ export const getProductDetailsController = async (
 };
 export const saveProductController = async (req: Request, res: Response) => {
   try {
-    const userId = req.body.userId;
+    const token = req.headers.authorization as string;
     const productId = req.params.id;
     const product = await productModel.findById(productId);
-    const user = await userModel.findOne({ _id: userId });
-    // console.log(
-    //   getCurrentUserEmail(
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkaXR5YWd1cHRhMTI5MUBnbWFpbC5jb20iLCJpZCI6IjY3MjdhMzg2MzI2NTdjNWU3NjUxZDhhYiIsImlhdCI6MTczMDY1ODk0M30._yOPYiZvCTOSI7O6NZAMnMyspsfMkEgOERufAnQ8grM"
-    //   )
-    // );
+    const user = await userModel.findOne({ _id: getCurrentUserEmail(token) });
     if (!user) {
       res.status(400).json("User not found in database");
       return;
