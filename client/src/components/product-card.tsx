@@ -9,8 +9,15 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { product } from "@/product";
+import { cn } from "@/lib/utils";
 
-export default function ProductCard({ product }: { product: product }) {
+export default function ProductCard({
+  product,
+  isLiked,
+}: {
+  product: product;
+  isLiked: boolean;
+}) {
   const categories = product.category.split(",");
   return (
     <Card className="flex flex-col max-w-[350px] max-h-[570px]">
@@ -24,7 +31,13 @@ export default function ProductCard({ product }: { product: product }) {
             className="rounded-t-lg object-cover"
           />
           <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
-            <Heart className="w-5 h-5 text-gray-600" />
+            <Heart
+              className={cn(
+                "w-5 h-5 text-gray-600 transition-all",
+                isLiked && "text-red-500"
+              )}
+              fill={isLiked ? "red" : "none"}
+            />
             <span className="sr-only">Add to favorites</span>
           </button>
         </div>

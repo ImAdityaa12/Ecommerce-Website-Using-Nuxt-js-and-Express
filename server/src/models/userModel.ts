@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  savedProduct: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+    ref: "Product",
+  },
 });
 
 export default mongoose.model("User", userSchema);
