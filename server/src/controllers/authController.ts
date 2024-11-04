@@ -112,33 +112,6 @@ export const userDetailsController = async (
     res.status(500).json({ message: "An error occurred" });
   }
 };
-// export const userSavedItemsController = async (
-//   req: Request,
-//   res: Response
-// ): Promise<void> => {
-//   try {
-//     const token = req.headers.authorization;
-//     if (!token) {
-//       res.status(401).json({ message: "Unauthorized" });
-//       return;
-//     }
-//     const cleanToken = token.replace("Bearer ", "");
-//     const decoded = jwt.verify(
-//       cleanToken,
-//       process.env.JWT_KEY as string
-//     ) as jwt.JwtPayload;
-//     const email = decoded.email;
-//     const user = await userModel.findOne({ email });
-//     if (!user) {
-//       res.status(404).json({ message: "User not found" });
-//       return;
-//     }
-//     const savedProduct = user.savedProduct.map((id) => id.toString());
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "An error occurred" });
-//   }
-// };
 
 export const userSavedItemsController = async (
   req: Request,
@@ -157,10 +130,9 @@ export const userSavedItemsController = async (
     ) as jwt.JwtPayload;
     const email = decoded.email;
 
-    // Use populate to get the full product details
     const user = await userModel
       .findOne({ email })
-      .populate("savedProduct") // This will populate all fields from the Product model
+      .populate("savedProduct")
       .exec();
 
     if (!user) {
@@ -169,10 +141,7 @@ export const userSavedItemsController = async (
     }
 
     // Send the populated saved products as response
-    res.status(200).json({
-      success: true,
-      savedProducts: user.savedProduct,
-    });
+    res.status(200).json(user.savedProduct);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred" });
