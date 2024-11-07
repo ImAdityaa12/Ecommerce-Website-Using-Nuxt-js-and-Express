@@ -92,3 +92,24 @@ export const saveProductController = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const searchProductsController = async (req: Request, res: Response) => {
+  try {
+    const query = req.query.q as string;
+    const filteredProducts = await productModel.find({
+      $or: [
+        { title: { $regex: new RegExp(query, "i") } },
+        { brand: { $regex: new RegExp(query, "i") } },
+        { category: { $regex: new RegExp(query, "i") } },
+        { description: { $regex: new RegExp(query, "i") } },
+      ],
+    });
+    res.json(filteredProducts);
+    return;
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while searching products" });
+  }
+};
