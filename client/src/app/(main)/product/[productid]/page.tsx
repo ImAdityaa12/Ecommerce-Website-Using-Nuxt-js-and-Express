@@ -13,6 +13,11 @@ import {
 } from "@/components/ui/carousel";
 import { ShoppingCart, Heart } from "lucide-react";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
+import { getCookie } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import { product } from "@/product";
 
 // Mock data for similar and latest products
 const mockProducts = [
@@ -67,34 +72,77 @@ export default function ProductDetail() {
     salePrice: 9898,
     totalStock: 9384294,
   };
+  const { productid: id } = useParams();
+  const [currentProductDetail, setCurrentProductDetail] = useState<product>({
+    _id: "",
+    image: "",
+    title: "",
+    description: "",
+    price: 0,
+    brand: "",
+    category: "",
+    salePrice: 0,
+    totalStock: 0,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+  const getItems = async () => {
+    const token = getCookie("token");
+    try {
+      const response = await fetch(
+        `http://localhost:7000/products/shop/product/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await response.json();
+      setCurrentProductDetail(data.product);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error adding item to favorites");
+    }
+  };
 
+  useEffect(() => {
+    getItems();
+  }, []);
   return (
     <ContentLayout title="Products">
-      <div className="mx-auto px-4 py-8 border">
-        <div className="grid md:grid-cols-2 gap-8 border">
-          <div>
-            <Image
-              src={product.image}
-              alt={product.title}
-              width={500}
-              height={500}
-              className="rounded-lg object-cover w-full h-full"
-            />
-          </div>
+      <div className="mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-8 mb-10">
+          {currentProductDetail.image && (
+            <div className="w-full">
+              <Image
+                src={currentProductDetail.image}
+                alt={currentProductDetail.title}
+                width={500}
+                height={500}
+                className="rounded-lg object-cover w-full h-full object-center"
+              />
+            </div>
+          )}
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold">{product.title}</h1>
-            <p className="text-gray-600">{product.description}</p>
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold">
-                ${(product.salePrice / 100).toFixed(2)}
-              </span>
+            <h1 className="text-3xl font-bold">
+              {currentProductDetail?.title}
+            </h1>
+            <p className="text-gray-600">{currentProductDetail?.description}</p>
+            <div className="flex items-center space -x-2">
+              {currentProductDetail?.salePrice && (
+                <span className="text-2xl font-bold">
+                  ${(currentProductDetail?.salePrice / 100).toFixed(2)}
+                </span>
+              )}
+
               <span className="text-lg text-gray-500 line-through">
                 ${(product.price / 100).toFixed(2)}
               </span>
             </div>
             <div>
-              <Badge>{product.brand}</Badge>
-              {product.category.split(",").map((cat, index) => (
+              <Badge>{currentProductDetail?.brand}</Badge>
+              {currentProductDetail?.category.split(",").map((cat, index) => (
                 <Badge key={index} variant="secondary" className="ml-2">
                   {cat.trim()}
                 </Badge>
