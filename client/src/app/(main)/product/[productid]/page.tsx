@@ -70,8 +70,8 @@ export default function ProductDetail() {
 
   return (
     <ContentLayout title="Products">
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+      <div className="mx-auto px-4 py-8 border">
+        <div className="grid md:grid-cols-2 gap-8 border">
           <div>
             <Image
               src={product.image}

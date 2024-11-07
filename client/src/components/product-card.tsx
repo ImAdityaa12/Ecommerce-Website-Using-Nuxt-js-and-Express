@@ -9,7 +9,10 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { product } from "@/product";
-import { cn } from "@/lib/utils";
+import { cn, getCookie } from "@/lib/utils";
+import { toast } from "sonner";
+import useProductStore from "@/store/productsStore";
+import { useRouter } from "next/navigation";
 
 export default function ProductCard({
   product,
@@ -19,6 +22,32 @@ export default function ProductCard({
   isLiked: boolean;
 }) {
   const categories = product.category.split(",");
+  const { toggleLike } = useProductStore();
+  const router = useRouter();
+  const addFavoriteItem = async (id: string) => {
+    const token = getCookie("token");
+    try {
+      const response = await fetch(
+        `http://localhost:7000/products/shop/save/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Hello");
+      if (response.status === 200) {
+        toast.success("Item added to favorites");
+        toggleLike(id);
+      } else {
+        toast.error("Error adding item to favorites");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error adding item to favorites");
+    }
+  };
   return (
     <Card className="flex flex-col max-w-[350px] max-h-[570px]">
       <CardHeader className="p-0">
@@ -27,10 +56,14 @@ export default function ProductCard({
             src={product.image}
             alt={product.title}
             fill
-            // objectFit="cover"
-            className="rounded-t-lg object-cover"
+            sizes="(100vw, 100vh)"
+            className="rounded-t-lg object-cover cursor-pointer"
+            onClick={() => router.push(`/product/${product._id}`)}
           />
-          <button className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors">
+          <button
+            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+            onClick={() => addFavoriteItem(product._id)}
+          >
             <Heart
               className={cn(
                 "w-5 h-5 text-gray-600 transition-all",
@@ -43,7 +76,12 @@ export default function ProductCard({
         </div>
       </CardHeader>
       <CardContent className="flex-grow p-4">
-        <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
+        <h2
+          className="text-xl font-semibold mb-2 cursor-pointer"
+          onClick={() => router.push(`/product/${product._id}`)}
+        >
+          {product.title}
+        </h2>
         <div className="flex justify-between items-center mb-2">
           <div>
             <span className="text-lg font-bold">${product.salePrice}</span>

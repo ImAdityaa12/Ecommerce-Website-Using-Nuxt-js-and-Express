@@ -1,16 +1,11 @@
 "use client";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
 import ProductCard from "@/components/product-card";
-import { product } from "@/product";
-import { useCallback, useEffect, useState } from "react";
+import useProductStore from "@/store/productsStore";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 export default function DashboardPage() {
-  const [products, setProducts] = useState<
-    {
-      product: product;
-      isLiked: boolean;
-    }[]
-  >([]);
+  const { products, setProducts } = useProductStore();
   const getProducts = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:7000/products/shop");
