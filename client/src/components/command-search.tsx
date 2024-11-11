@@ -37,19 +37,7 @@ export default function CommandSearch() {
         `http://localhost:7000/products/shop/search?q=${value}`
       );
       const data: product[] = await response.json();
-      // const newCommands: CommandCategory[] = [
-      //   {
-      //     category: "Products",
-      //     items: data.map((item) => ({
-      //       icon: Calendar,
-      //       name: item.title,
-      //       shortcut: "⌘C",
-      //       action: () => router.push(`/product/${item._id}`),
-      //     })),
-      //   },
-      // ];
       setSearchData(data);
-      // console.log(newCommands);
     } catch (error) {
       console.log(error);
       toast.error("Error searching products");
@@ -74,9 +62,6 @@ export default function CommandSearch() {
         </span>
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        {/* <DialogTrigger asChild>
-          <Button variant="outline">Search Products</Button>
-        </DialogTrigger> */}
         <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px]">
           <DialogHeader>
             <DialogTitle>Search Products</DialogTitle>
@@ -108,7 +93,6 @@ export default function CommandSearch() {
                   </div>
                   <Button
                     onClick={() => {
-                      // Implement redirect logic here
                       router.push(`/product/${product._id}`);
                       console.log(`Redirecting to product: ${product._id}`);
                       setOpen(false);
@@ -122,40 +106,6 @@ export default function CommandSearch() {
           </div>
         </DialogContent>
       </Dialog>
-      {/* <CommandDialog open={open} onOpenChange={setOpen}>
-        <Title className="hidden">hello</Title>
-        <Command className="rounded-lg border shadow-md md:min-w-[450px] duration-500">
-          <CommandInput
-            placeholder="Type a command or search..."
-            onValueChange={(value) => searchProducts(value)}
-          />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            {searchData.map((group, index) => (
-              <React.Fragment key={index}>
-                <CommandGroup heading={group.category}>
-                  {group.items.map((item) => (
-                    <CommandItem
-                      key={item.name}
-                      onSelect={() => {
-                        setOpen(false);
-                        item.action();
-                      }}
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      <span>{item.name}</span>
-                      {item.shortcut && (
-                        <CommandShortcut>{item.shortcut}</CommandShortcut>
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-                <CommandSeparator />
-              </React.Fragment>
-            ))}
-          </CommandList>
-        </Command>
-      </CommandDialog> */}
     </div>
   );
 }
