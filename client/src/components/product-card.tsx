@@ -36,7 +36,6 @@ export default function ProductCard({
           },
         }
       );
-      console.log("Hello");
       if (response.status === 200) {
         toast.success("Item added to favorites");
         toggleLike(id);
@@ -48,8 +47,34 @@ export default function ProductCard({
       toast.error("Error adding item to favorites");
     }
   };
+  const addToCart = async (product: product) => {
+    const token = getCookie("token");
+    try {
+      const response = await fetch(
+        "http://localhost:7000/user/cart/addToCart",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product._id,
+            quantity: 1,
+          }),
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Item added to cart");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error adding item to cart");
+    }
+  };
+
   return (
-    <Card className="flex flex-col max-w-[350px] max-h-[570px]">
+    <Card className="flex flex-col max-w-[350px] max-h-[570px] overflow-hidden">
       <CardHeader className="p-0">
         <div className="relative aspect-square">
           <Image
@@ -106,7 +131,7 @@ export default function ProductCard({
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full">
+        <Button className="w-full" onClick={() => addToCart(product)}>
           <ShoppingCart className="w-4 h-4 mr-2" />
           Add to Cart
         </Button>

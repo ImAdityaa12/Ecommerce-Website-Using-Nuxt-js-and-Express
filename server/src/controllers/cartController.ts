@@ -3,7 +3,7 @@ import cartModel from "../models/cartModel";
 import productModel from "../models/productModel";
 import { Types } from "mongoose";
 import userModel from "../models/userModel";
-import { getCurrentUserEmail } from "../utils/currentUserEmail";
+import { getCurrentUserId } from "../utils/currentUserId";
 interface IProduct {
   _id: Types.ObjectId;
   image: string;
@@ -50,7 +50,7 @@ export const addToCartController = async (req: Request, res: Response) => {
       res.status(400).json("Product not found in databse");
       return;
     }
-    const userId = getCurrentUserEmail(token);
+    const userId = getCurrentUserId(token);
     let cart = await cartModel.findOne({ userId: userId });
     if (!cart) {
       cart = new cartModel({
@@ -84,7 +84,7 @@ export const fetchCartController = async (
       res.status(401).json("Unauthorized");
       return;
     }
-    const userId = getCurrentUserEmail(token);
+    const userId = getCurrentUserId(token);
     const cart = await cartModel
       .findOne({ userId })
       .populate<{ items: ICartItem[] }>({
@@ -130,7 +130,7 @@ export const updateCartItemQuantityController = async (
       res.status(401).json("Unauthorized");
       return;
     }
-    const userId = getCurrentUserEmail(token);
+    const userId = getCurrentUserId(token);
     if (!userId || !productId || !quantity) {
       res.status(400).json("Missing required fields");
       return;
@@ -177,7 +177,7 @@ export const deleteCartItemController = async (req: Request, res: Response) => {
   try {
     const { productId } = req.body;
     const token = req.headers.authorization;
-    const userId = getCurrentUserEmail(token as string);
+    const userId = getCurrentUserId(token as string);
     if (!productId) {
       res.status(400).json("Missing required fields");
       return;

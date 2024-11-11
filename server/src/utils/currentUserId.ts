@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-export const getCurrentUserEmail = (token: string) => {
+export const getCurrentUserId = (token: string) => {
   const cleanToken = token.replace("Bearer ", "");
   const decoded = jwt.verify(
     cleanToken,
