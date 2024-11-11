@@ -9,8 +9,6 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { toast } from "sonner";
 
-// This would be your actual base URL
-
 export default function AddProductMain() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [formData, setFormData] = useState({
