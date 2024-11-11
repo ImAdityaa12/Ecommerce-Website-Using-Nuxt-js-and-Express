@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Search,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
+import { Search } from "lucide-react";
 
 import {
   Command,
@@ -24,58 +16,53 @@ import {
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Title } from "@radix-ui/react-dialog";
-const commands = [
-  {
-    category: "Suggestions",
-    items: [
-      {
-        icon: Calendar,
-        name: "Calendar",
-        shortcut: "⌘C",
-        action: () => console.log("Calendar opened"),
-      },
-      {
-        icon: Smile,
-        name: "Search Emoji",
-        shortcut: "⌘E",
-        action: () => console.log("Emoji search opened"),
-      },
-      {
-        icon: Calculator,
-        name: "Calculator",
-        shortcut: "⌘K",
-        action: () => console.log("Calculator opened"),
-      },
-    ],
-  },
-  {
-    category: "Settings",
-    items: [
-      {
-        icon: User,
-        name: "Profile",
-        shortcut: "⌘P",
-        action: () => console.log("Profile opened"),
-      },
-      {
-        icon: CreditCard,
-        name: "Billing",
-        shortcut: "⌘B",
-        action: () => console.log("Billing opened"),
-      },
-      {
-        icon: Settings,
-        name: "Settings",
-        shortcut: "⌘S",
-        action: () => console.log("Settings opened"),
-      },
-    ],
-  },
-];
+import { toast } from "sonner";
+import { product } from "@/product";
+import { Calendar } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+type CommandItem = {
+  icon: React.ElementType;
+  name: string;
+  shortcut: string;
+  action: () => void;
+};
+
+type CommandCategory = {
+  category: string;
+  items: CommandItem[];
+};
+
+// const commands: CommandCategory[] = [
+//   {
+//     category: "Products",
+//     items: [
+//       {
+//         icon: Calendar,
+//         name: "Calendar",
+//         shortcut: "⌘C",
+//         action: () => console.log("Calendar opened"),
+//       },
+//       {
+//         icon: Smile,
+//         name: "Search Emoji",
+//         shortcut: "⌘E",
+//         action: () => console.log("Emoji search opened"),
+//       },
+//       {
+//         icon: Calculator,
+//         name: "Calculator",
+//         shortcut: "⌘K",
+//         action: () => console.log("Calculator opened"),
+//       },
+//     ],
+//   },
+// ];
 
 export default function CommandSearch() {
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
-
+  const [searchData, setSearchData] = React.useState<CommandCategory[]>([]);
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -87,7 +74,33 @@ export default function CommandSearch() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
-
+  async function searchProducts(value: string) {
+    try {
+      const response = await fetch(
+        `http://localhost:7000/products/shop/search?q=${value}`
+      );
+      const data: product[] = await response.json();
+      const newCommands: CommandCategory[] = [
+        {
+          category: "Products",
+          items: data.map((item) => ({
+            icon: Calendar,
+            name: item.title,
+            shortcut: "⌘C",
+            action: () => router.push(`/product/${item._id}`),
+          })),
+        },
+      ];
+      setSearchData(newCommands);
+      console.log(newCommands);
+    } catch (error) {
+      console.log(error);
+      toast.error("Error searching products");
+    }
+  }
+  React.useEffect(() => {
+    searchProducts("");
+  }, []);
   return (
     <div className="w-full ml-auto">
       <Button
@@ -99,43 +112,18 @@ export default function CommandSearch() {
           <Search className="text-white ml-auto group-hover:text-blue-400" />
         </span>
       </Button>
-      {/* <CommandDialog open={open} onOpenChange={setOpen}>
-        <VisuallyHidden.Root>x</VisuallyHidden.Root>
-        <CommandInput placeholder="Type a command or search..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          {commands.map((group) => (
-            <React.Fragment key={group.category}>
-              <CommandGroup heading={group.category}>
-                {group.items.map((item) => (
-                  <CommandItem
-                    key={item.name}
-                    onSelect={() => {
-                      setOpen(false);
-                      item.action();
-                    }}
-                  >
-                    <item.icon className="mr-2 h-4 w-4" />
-                    <span>{item.name}</span>
-                    {item.shortcut && (
-                      <CommandShortcut>{item.shortcut}</CommandShortcut>
-                    )}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-              <CommandSeparator />
-            </React.Fragment>
-          ))}
-        </CommandList>
-      </CommandDialog> */}
+
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Title className="hidden">hello</Title>
         <Command className="rounded-lg border shadow-md md:min-w-[450px] duration-500">
-          <CommandInput placeholder="Type a command or search..." />
+          <CommandInput
+            placeholder="Type a command or search..."
+            onValueChange={(value) => searchProducts(value)}
+          />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
-            {commands.map((group) => (
-              <React.Fragment key={group.category}>
+            {searchData.map((group, index) => (
+              <React.Fragment key={index}>
                 <CommandGroup heading={group.category}>
                   {group.items.map((item) => (
                     <CommandItem
