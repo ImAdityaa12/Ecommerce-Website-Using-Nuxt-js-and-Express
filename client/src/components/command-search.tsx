@@ -2,67 +2,24 @@
 
 import * as React from "react";
 import { Search } from "lucide-react";
-
+import { Input } from "@/components/ui/input";
 import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-  CommandShortcut,
-} from "@/components/ui/command";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Title } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 import { product } from "@/product";
-import { Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-type CommandItem = {
-  icon: React.ElementType;
-  name: string;
-  shortcut: string;
-  action: () => void;
-};
-
-type CommandCategory = {
-  category: string;
-  items: CommandItem[];
-};
-
-// const commands: CommandCategory[] = [
-//   {
-//     category: "Products",
-//     items: [
-//       {
-//         icon: Calendar,
-//         name: "Calendar",
-//         shortcut: "⌘C",
-//         action: () => console.log("Calendar opened"),
-//       },
-//       {
-//         icon: Smile,
-//         name: "Search Emoji",
-//         shortcut: "⌘E",
-//         action: () => console.log("Emoji search opened"),
-//       },
-//       {
-//         icon: Calculator,
-//         name: "Calculator",
-//         shortcut: "⌘K",
-//         action: () => console.log("Calculator opened"),
-//       },
-//     ],
-//   },
-// ];
+import Image from "next/image";
 
 export default function CommandSearch() {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
-  const [searchData, setSearchData] = React.useState<CommandCategory[]>([]);
+  const [query, setQuery] = React.useState("");
+  const [searchData, setSearchData] = React.useState<product[]>([]);
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -80,24 +37,27 @@ export default function CommandSearch() {
         `http://localhost:7000/products/shop/search?q=${value}`
       );
       const data: product[] = await response.json();
-      const newCommands: CommandCategory[] = [
-        {
-          category: "Products",
-          items: data.map((item) => ({
-            icon: Calendar,
-            name: item.title,
-            shortcut: "⌘C",
-            action: () => router.push(`/product/${item._id}`),
-          })),
-        },
-      ];
-      setSearchData(newCommands);
-      console.log(newCommands);
+      // const newCommands: CommandCategory[] = [
+      //   {
+      //     category: "Products",
+      //     items: data.map((item) => ({
+      //       icon: Calendar,
+      //       name: item.title,
+      //       shortcut: "⌘C",
+      //       action: () => router.push(`/product/${item._id}`),
+      //     })),
+      //   },
+      // ];
+      setSearchData(data);
+      // console.log(newCommands);
     } catch (error) {
       console.log(error);
       toast.error("Error searching products");
     }
   }
+  React.useEffect(() => {
+    searchProducts(query);
+  }, [query]);
   React.useEffect(() => {
     searchProducts("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,8 +73,56 @@ export default function CommandSearch() {
           <Search className="text-white ml-auto group-hover:text-blue-400" />
         </span>
       </Button>
-
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen}>
+        {/* <DialogTrigger asChild>
+          <Button variant="outline">Search Products</Button>
+        </DialogTrigger> */}
+        <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Search Products</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Input
+              placeholder="Search products..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <div className="max-h-[400px] overflow-y-auto">
+              {searchData.map((product) => (
+                <div
+                  key={product._id}
+                  className="flex items-center space-x-4 py-2 border-b px-4"
+                >
+                  <Image
+                    src={product.image}
+                    alt={product.title}
+                    width={50}
+                    height={50}
+                    className="rounded-md object-cover"
+                  />
+                  <div className="flex-grow">
+                    <h3 className="font-semibold">{product.title}</h3>
+                    <p className="text-sm text-gray-500">
+                      ${product.price.toFixed(2)}
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      // Implement redirect logic here
+                      router.push(`/product/${product._id}`);
+                      console.log(`Redirecting to product: ${product._id}`);
+                      setOpen(false);
+                    }}
+                  >
+                    View
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* <CommandDialog open={open} onOpenChange={setOpen}>
         <Title className="hidden">hello</Title>
         <Command className="rounded-lg border shadow-md md:min-w-[450px] duration-500">
           <CommandInput
@@ -147,7 +155,7 @@ export default function CommandSearch() {
             ))}
           </CommandList>
         </Command>
-      </CommandDialog>
+      </CommandDialog> */}
     </div>
   );
 }
