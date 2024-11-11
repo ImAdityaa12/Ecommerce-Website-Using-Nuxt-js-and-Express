@@ -108,6 +108,7 @@ export default function ProductDetail() {
 
   useEffect(() => {
     getItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <ContentLayout title="Products">

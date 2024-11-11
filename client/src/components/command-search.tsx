@@ -100,6 +100,7 @@ export default function CommandSearch() {
   }
   React.useEffect(() => {
     searchProducts("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="w-full ml-auto">

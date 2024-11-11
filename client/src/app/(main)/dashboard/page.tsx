@@ -19,6 +19,7 @@ export default function DashboardPage() {
         toast.error(`Failed to fetch products: ${error.message}`);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
