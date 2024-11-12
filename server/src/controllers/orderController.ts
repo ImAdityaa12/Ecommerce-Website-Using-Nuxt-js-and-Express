@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import paypal from "../utils/paypal";
 import orderModel from "../models/orderModel";
 import cartModel from "../models/cartModel";
+import { getCurrentUserId } from "../utils/currentUserId";
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -86,25 +87,25 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 export const capturePayment = async (req: Request, res: Response) => {
-  try {
-    const { paymentId, payerId, orderId } = req.body;
-    const order = await orderModel.findById(orderId);
-    if (!order) {
-      res.status(404).json("Order not found");
-      return;
-    }
-    order.paymentStatus = "paid";
-    order.orderStatus = "confirmed";
-    order.paymentId = paymentId;
-    order.payerId = payerId;
-    await order.save();
-    const getCartId = order.cartId;
-    await cartModel.findByIdAndDelete(getCartId);
-    res.status(200).json("Payment captured successfully");
-  } catch (error) {
-    console.error(error);
-    res.status(500).json("An error occurred");
-  }
+  // try {
+  //   const { paymentId, payerId, orderId } = req.body;
+  //   const order = await orderModel.findById(orderId);
+  //   if (!order) {
+  //     res.status(404).json("Order not found");
+  //     return;
+  //   }
+  //   order.paymentStatus = "paid";
+  //   order.orderStatus = "confirmed";
+  //   order.paymentId = paymentId;
+  //   order.payerId = payerId;
+  //   await order.save();
+  //   const getCartId = order.cartId;
+  //   await cartModel.findByIdAndDelete(getCartId);
+  //   res.status(200).json("Payment captured successfully");
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json("An error occurred");
+  // }
 };
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
@@ -128,6 +129,34 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 
 export const addOrderController = async (req: Request, res: Response) => {
   try {
+    const {
+      cartItems,
+      address,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      totalAmount,
+      orderDate,
+      cartId,
+    } = req.body;
+    const token = req.headers.authorization as string;
+    const userId = getCurrentUserId(token);
+    const newOrder = new orderModel({
+      userId,
+      cartItems,
+      address,
+      orderStatus,
+      paymentMethod,
+      paymentStatus,
+      totalAmount,
+      orderDate,
+      cartId,
+    });
+    await newOrder.save();
+    res.status(200).json({
+      message: "Order added successfully",
+      order: newOrder,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json("An error occurred");
