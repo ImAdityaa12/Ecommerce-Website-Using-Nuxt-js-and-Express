@@ -125,3 +125,12 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const addOrderController = async (req: Request, res: Response) => {
+  try {
+  } catch (error) {
+    console.error(error);
+    res.status(500).json("An error occurred");
+    return;
+  }
+};

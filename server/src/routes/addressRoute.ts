@@ -6,7 +6,7 @@ import {
   updateAddressController,
 } from "../controllers/addressController";
 const router = express.Router();
-router.get("/all/:userId", fetchAllAddressController);
+router.get("/all", fetchAllAddressController);
 router.post("/add", addAddressController);
 router.put("/update/:userId/:id", updateAddressController);
 router.delete("/delete/:id", deleteAddressController);
