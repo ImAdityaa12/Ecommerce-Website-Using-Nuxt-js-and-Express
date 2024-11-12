@@ -135,36 +135,6 @@ export default function CheckoutPage() {
             </Tabs>
             <Button className="w-full mt-6">Complete Purchase</Button>
           </div>
-          {/* <div>
-          <h2 className="text-xl font-semibold mb-4">Payment Methods</h2>
-          <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <QrCode className="h-6 w-6" />
-              <span>Pay with QR Code</span>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Bank Transfer Details</h3>
-              <div className="space-y-2">
-                <div>
-                  <Label htmlFor="accountName">Account Name</Label>
-                  <Input id="accountName" placeholder="Enter account name" />
-                </div>
-                <div>
-                  <Label htmlFor="accountNumber">Account Number</Label>
-                  <Input
-                    id="accountNumber"
-                    placeholder="Enter account number"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="bankName">Bank Name</Label>
-                  <Input id="bankName" placeholder="Enter bank name" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <Button className="w-full mt-6">Complete Purchase</Button>
-        </div> */}
         </div>
       </div>
     </ContentLayout>
