@@ -10,9 +10,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getCookie } from "@/lib/utils";
 import userDetailsStore from "@/store/userDetail";
-import { useEffect } from "react";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useStore } from "zustand";
+import AddAddressModal from "./add-address-modal";
 export interface Address {
   address: string;
   city: string;
@@ -23,6 +27,7 @@ export interface Address {
 }
 
 export default function ProfilePage() {
+  const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
   const { userDetails, addresses, getUserAddress } = useStore(userDetailsStore);
   const user = {
     name: "John Doe",
@@ -31,12 +36,18 @@ export default function ProfilePage() {
     phoneNumber: "+1 (555) 123-4567",
     profileImage: "/placeholder.svg?height=128&width=128",
   };
-
+  const handleNewAddressSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you would typically handle the form submission,
+    // add the new address to the list, and close the modal
+    setIsNewAddressModalOpen(false);
+  };
   const orders = [
     { id: 1, date: "2023-05-01", total: "$120.00", status: "Delivered" },
     { id: 2, date: "2023-05-15", total: "$85.50", status: "Processing" },
     { id: 3, date: "2023-06-02", total: "$200.00", status: "Shipped" },
   ];
+
   useEffect(() => {
     getUserAddress();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -88,6 +99,11 @@ export default function ProfilePage() {
             {addresses.map((address, index) => (
               <AddressCard key={index} address={address} />
             ))}
+            <AddAddressModal
+              handleNewAddressSubmit={handleNewAddressSubmit}
+              isNewAddressModalOpen={isNewAddressModalOpen}
+              setIsNewAddressModalOpen={setIsNewAddressModalOpen}
+            />
           </div>
         </div>
 
@@ -120,9 +136,38 @@ export default function ProfilePage() {
 }
 
 function AddressCard({ address }: { address: Address }) {
+  const { getUserAddress } = useStore(userDetailsStore);
+  const deleteAddress = async (id: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:7000/users/address/delete/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getCookie("token")}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      if (response.status === 200) {
+        toast.success("Address deleted successfully");
+      }
+      getUserAddress();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Card className="mb-4">
-      <CardContent className="pt-6">
+      <CardContent className="relative pt-6">
+        <X
+          className="absolute right-2 top-2 cursor-pointer text-red-400 hover:bg-red-600 rounded-full hover:text-white p-1 transition-all"
+          onClick={() => deleteAddress(address._id)}
+        />
         <p className="font-medium">{address.address}</p>
         <p>
           {address.city}, {address.pincode}
