@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ShoppingCart, Plus, Minus, X } from "lucide-react";
 import Image from "next/image";
 import {
@@ -12,86 +12,13 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getCookie } from "@/lib/utils";
-import { toast } from "sonner";
-
-interface CartItem {
-  productId: number;
-  title: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+import useCartStore from "@/store/cartStore";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  const updateQuantity = async (productId: number, quantity: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/user/cart/updateCartItemQuantity`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          body: JSON.stringify({ productId, quantity }),
-        }
-      );
-      if (response.status === 200) {
-        getCartItems();
-        toast.success("Item quantity updated");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const removeItem = async (id: number) => {
-    try {
-      const response = await fetch(
-        `http://localhost:7000/user/cart/deleteCartItem`,
-        {
-          method: "DELETE",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-          body: JSON.stringify({ productId: id }),
-        }
-      );
-      if (response.status === 200) {
-        getCartItems();
-        toast.error("Item removed from cart");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const getCartItems = async () => {
-    try {
-      const response = await fetch("http://localhost:7000/user/cart/", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getCookie("token")}`,
-        },
-      });
-      const data = await response.json();
-      setCartItems(data.items);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const router = useRouter();
+  const { cartItems, getCartItems, updateQuantity, removeItem, cartId } =
+    useCartStore();
   useEffect(() => {
     getCartItems();
   }, []);
@@ -127,7 +54,7 @@ export default function Cart() {
               <div className="flex-1">
                 <h3 className="font-semibold">{item.title}</h3>
                 <p className="text-sm text-gray-500">
-                  ${item.price.toFixed(2)}
+                  ${item.salePrice.toFixed(2)}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
@@ -160,9 +87,21 @@ export default function Cart() {
         <div className="mt-4 space-y-4">
           <div className="flex justify-between text-lg font-semibold">
             <span>Total:</span>
-            <span>${totalPrice.toFixed(2)}</span>
+            <span>
+              $
+              {cartItems.reduce(
+                (total, item) =>
+                  total + (item.salePrice || item.price) * item.quantity,
+                0
+              )}
+            </span>
           </div>
-          <Button className="w-full">Checkout</Button>
+          <Button
+            className="w-full"
+            onClick={() => router.push(`/checkout?cartId=${cartId}`)}
+          >
+            Checkout
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

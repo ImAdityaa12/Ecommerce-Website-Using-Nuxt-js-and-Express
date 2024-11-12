@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { getCookie } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { product } from "@/product";
+import useCartStore from "@/store/cartStore";
 
 // Mock data for similar and latest products
 const mockProducts = [
@@ -60,6 +61,7 @@ const mockProducts = [
 ];
 
 export default function ProductDetail() {
+  const { getCartItems } = useCartStore();
   const product = {
     image:
       "http://res.cloudinary.com/dx1kkvs4z/image/upload/v1729747569/u0rtaiwgf…",
@@ -105,7 +107,32 @@ export default function ProductDetail() {
       toast.error("Error adding item to favorites");
     }
   };
-
+  const addToCart = async (product: product) => {
+    const token = getCookie("token");
+    try {
+      const response = await fetch(
+        "http://localhost:7000/user/cart/addToCart",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            productId: product._id,
+            quantity: 1,
+          }),
+        }
+      );
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Item added to cart");
+        getCartItems();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error adding item to cart");
+    }
+  };
   useEffect(() => {
     getItems();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,7 +180,10 @@ export default function ProductDetail() {
               In stock: {product.totalStock}
             </p>
             <div className="flex space-x-4">
-              <Button className="flex-1">
+              <Button
+                className="flex-1"
+                onClick={() => addToCart(currentProductDetail)}
+              >
                 <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
               </Button>
               <Button variant="outline">

@@ -13,6 +13,7 @@ import { cn, getCookie } from "@/lib/utils";
 import { toast } from "sonner";
 import useProductStore from "@/store/productsStore";
 import { useRouter } from "next/navigation";
+import useCartStore from "@/store/cartStore";
 
 export default function ProductCard({
   product,
@@ -23,6 +24,7 @@ export default function ProductCard({
 }) {
   const categories = product.category.split(",");
   const { toggleLike } = useProductStore();
+  const { getCartItems } = useCartStore();
   const router = useRouter();
   const addFavoriteItem = async (id: string) => {
     const token = getCookie("token");
@@ -66,6 +68,7 @@ export default function ProductCard({
       );
       if (response.status === 200 || response.status === 201) {
         toast.success("Item added to cart");
+        getCartItems();
       }
     } catch (error) {
       console.log(error);
