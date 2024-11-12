@@ -36,12 +36,6 @@ export default function ProfilePage() {
     phoneNumber: "+1 (555) 123-4567",
     profileImage: "/placeholder.svg?height=128&width=128",
   };
-  const handleNewAddressSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Here you would typically handle the form submission,
-    // add the new address to the list, and close the modal
-    setIsNewAddressModalOpen(false);
-  };
   const orders = [
     { id: 1, date: "2023-05-01", total: "$120.00", status: "Delivered" },
     { id: 2, date: "2023-05-15", total: "$85.50", status: "Processing" },
@@ -100,7 +94,6 @@ export default function ProfilePage() {
               <AddressCard key={index} address={address} />
             ))}
             <AddAddressModal
-              handleNewAddressSubmit={handleNewAddressSubmit}
               isNewAddressModalOpen={isNewAddressModalOpen}
               setIsNewAddressModalOpen={setIsNewAddressModalOpen}
             />

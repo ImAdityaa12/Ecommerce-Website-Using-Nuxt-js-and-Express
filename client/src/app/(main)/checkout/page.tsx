@@ -25,13 +25,6 @@ export default function CheckoutPage() {
     setSelectedAddress(addressId);
   };
 
-  const handleNewAddressSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Here you would typically handle the form submission,
-    // add the new address to the list, and close the modal
-    setIsNewAddressModalOpen(false);
-  };
-
   // const addresses: Address[] = [
   //   {
   //     id: "1",
@@ -158,7 +151,6 @@ export default function CheckoutPage() {
               <AddAddressModal
                 isNewAddressModalOpen={isNewAddressModalOpen}
                 setIsNewAddressModalOpen={setIsNewAddressModalOpen}
-                handleNewAddressSubmit={handleNewAddressSubmit}
               />
             </CardContent>
           </Card>
