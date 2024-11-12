@@ -9,10 +9,60 @@ import { getCookie } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CreditCard, QrCode, Smartphone } from "lucide-react";
+import { CreditCard, Plus, QrCode, Smartphone } from "lucide-react";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+interface Address {
+  id: string;
+  address: string;
+  city: string;
+  pincode: string;
+  phone: string;
+  notes: string;
+}
 export default function CheckoutPage() {
   const [products, setProducts] = useState<CartProduct[]>([]);
+  const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
+  const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const handleAddressSelect = (addressId: string) => {
+    setSelectedAddress(addressId);
+  };
+
+  const handleNewAddressSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Here you would typically handle the form submission,
+    // add the new address to the list, and close the modal
+    setIsNewAddressModalOpen(false);
+  };
+
+  const addresses: Address[] = [
+    {
+      id: "1",
+      address: "123 Main St",
+      city: "Anytown",
+      pincode: "12345",
+      phone: "555-1234",
+      notes: "Leave at the door",
+    },
+    {
+      id: "2",
+      address: "456 Elm St",
+      city: "Othertown",
+      pincode: "67890",
+      phone: "555-5678",
+      notes: "Ring the doorbell",
+    },
+  ];
   const getProducts = async () => {
     try {
       const response = await fetch("http://localhost:7000/user/cart/", {
@@ -75,6 +125,87 @@ export default function CheckoutPage() {
               Total: ${(totalPrice / 100).toFixed(2)}
             </div>
           </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Shipping Address</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup
+                value={selectedAddress || ""}
+                onValueChange={handleAddressSelect}
+              >
+                <ScrollArea className="h-[200px] rounded-md p-4">
+                  {addresses.map((address) => (
+                    <div
+                      key={address.id}
+                      className="flex items-center space-x-2 mb-4"
+                    >
+                      <RadioGroupItem
+                        value={address.id}
+                        id={`address-${address.id}`}
+                      />
+                      <Label
+                        htmlFor={`address-${address.id}`}
+                        className="flex-1 cursor-pointer"
+                      >
+                        <div className="w-full flex flex-col gap-1">
+                          <p>{address.address}</p>
+                          <p>
+                            {address.city}, {address.pincode}
+                          </p>
+                          <p>{address.phone}</p>
+                          <p className="text-sm text-gray-500">
+                            {address.notes}
+                          </p>
+                        </div>
+                      </Label>
+                    </div>
+                  ))}
+                </ScrollArea>
+              </RadioGroup>
+              <Dialog
+                open={isNewAddressModalOpen}
+                onOpenChange={setIsNewAddressModalOpen}
+              >
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="mt-4">
+                    <Plus className="w-4 h-4 mr-2" /> Add New Address
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Add New Address</DialogTitle>
+                  </DialogHeader>
+                  <form onSubmit={handleNewAddressSubmit} className="space-y-4">
+                    <div>
+                      <Label htmlFor="address">Address</Label>
+                      <Input id="address" placeholder="Enter your address" />
+                    </div>
+                    <div>
+                      <Label htmlFor="city">City</Label>
+                      <Input id="city" placeholder="Enter your city" />
+                    </div>
+                    <div>
+                      <Label htmlFor="pincode">Pincode</Label>
+                      <Input id="pincode" placeholder="Enter your pincode" />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone</Label>
+                      <Input id="phone" placeholder="Enter your phone number" />
+                    </div>
+                    <div>
+                      <Label htmlFor="notes">Notes</Label>
+                      <Textarea
+                        id="notes"
+                        placeholder="Any additional notes for delivery"
+                      />
+                    </div>
+                    <Button type="submit">Save Address</Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
           <div>
             <h2 className="text-xl font-semibold mb-4">Payment Methods</h2>
             <Tabs defaultValue="qr" className="w-full">
