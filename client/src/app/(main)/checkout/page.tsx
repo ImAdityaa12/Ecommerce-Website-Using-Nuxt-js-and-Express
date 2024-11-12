@@ -9,31 +9,18 @@ import { getCookie } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CreditCard, Plus, QrCode, Smartphone } from "lucide-react";
+import { CreditCard, QrCode, Smartphone } from "lucide-react";
 import { ContentLayout } from "@/components/admin-panel/content-layout";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-interface Address {
-  id: string;
-  address: string;
-  city: string;
-  pincode: string;
-  phone: string;
-  notes: string;
-}
+import userDetailsStore from "@/store/userDetail";
+import AddAddressModal from "@/components/add-address-modal";
 export default function CheckoutPage() {
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const { addresses, getUserAddress } = userDetailsStore();
   const handleAddressSelect = (addressId: string) => {
     setSelectedAddress(addressId);
   };
@@ -45,24 +32,24 @@ export default function CheckoutPage() {
     setIsNewAddressModalOpen(false);
   };
 
-  const addresses: Address[] = [
-    {
-      id: "1",
-      address: "123 Main St",
-      city: "Anytown",
-      pincode: "12345",
-      phone: "555-1234",
-      notes: "Leave at the door",
-    },
-    {
-      id: "2",
-      address: "456 Elm St",
-      city: "Othertown",
-      pincode: "67890",
-      phone: "555-5678",
-      notes: "Ring the doorbell",
-    },
-  ];
+  // const addresses: Address[] = [
+  //   {
+  //     id: "1",
+  //     address: "123 Main St",
+  //     city: "Anytown",
+  //     pincode: "12345",
+  //     phone: "555-1234",
+  //     notes: "Leave at the door",
+  //   },
+  //   {
+  //     id: "2",
+  //     address: "456 Elm St",
+  //     city: "Othertown",
+  //     pincode: "67890",
+  //     phone: "555-5678",
+  //     notes: "Ring the doorbell",
+  //   },
+  // ];
   const getProducts = async () => {
     try {
       const response = await fetch("http://localhost:7000/user/cart/", {
@@ -89,6 +76,8 @@ export default function CheckoutPage() {
   );
   useEffect(() => {
     getProducts();
+    getUserAddress();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <ContentLayout title="Checkout">
@@ -137,15 +126,15 @@ export default function CheckoutPage() {
                 <ScrollArea className="h-[200px] rounded-md p-4">
                   {addresses.map((address) => (
                     <div
-                      key={address.id}
+                      key={address._id}
                       className="flex items-center space-x-2 mb-4"
                     >
                       <RadioGroupItem
-                        value={address.id}
-                        id={`address-${address.id}`}
+                        value={address._id}
+                        id={`address-${address._id}`}
                       />
                       <Label
-                        htmlFor={`address-${address.id}`}
+                        htmlFor={`address-${address._id}`}
                         className="flex-1 cursor-pointer"
                       >
                         <div className="w-full flex flex-col gap-1">
@@ -163,47 +152,11 @@ export default function CheckoutPage() {
                   ))}
                 </ScrollArea>
               </RadioGroup>
-              <Dialog
-                open={isNewAddressModalOpen}
-                onOpenChange={setIsNewAddressModalOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="mt-4">
-                    <Plus className="w-4 h-4 mr-2" /> Add New Address
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
-                  <DialogHeader>
-                    <DialogTitle>Add New Address</DialogTitle>
-                  </DialogHeader>
-                  <form onSubmit={handleNewAddressSubmit} className="space-y-4">
-                    <div>
-                      <Label htmlFor="address">Address</Label>
-                      <Input id="address" placeholder="Enter your address" />
-                    </div>
-                    <div>
-                      <Label htmlFor="city">City</Label>
-                      <Input id="city" placeholder="Enter your city" />
-                    </div>
-                    <div>
-                      <Label htmlFor="pincode">Pincode</Label>
-                      <Input id="pincode" placeholder="Enter your pincode" />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input id="phone" placeholder="Enter your phone number" />
-                    </div>
-                    <div>
-                      <Label htmlFor="notes">Notes</Label>
-                      <Textarea
-                        id="notes"
-                        placeholder="Any additional notes for delivery"
-                      />
-                    </div>
-                    <Button type="submit">Save Address</Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              <AddAddressModal
+                isNewAddressModalOpen={isNewAddressModalOpen}
+                setIsNewAddressModalOpen={setIsNewAddressModalOpen}
+                handleNewAddressSubmit={handleNewAddressSubmit}
+              />
             </CardContent>
           </Card>
           <div>
@@ -264,7 +217,9 @@ export default function CheckoutPage() {
                 </div>
               </TabsContent>
             </Tabs>
-            <Button className="w-full mt-6">Complete Purchase</Button>
+            <Button className="w-full mt-6" disabled={!selectedAddress}>
+              Complete Purchase
+            </Button>
           </div>
         </div>
       </div>

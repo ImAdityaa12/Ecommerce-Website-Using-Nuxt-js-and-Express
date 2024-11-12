@@ -19,6 +19,7 @@ export interface Address {
   pincode: string;
   phone: string;
   notes: string;
+  _id: string;
 }
 
 export default function ProfilePage() {
