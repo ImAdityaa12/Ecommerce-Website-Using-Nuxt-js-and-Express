@@ -27,7 +27,7 @@ export default function AddProductMain() {
       return;
     }
     const response = await fetch(
-      "http://localhost:7000/admin/products/addNewProduct",
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}admin/products/addNewProduct`,
       {
         method: "POST",
         headers: {
@@ -72,7 +72,7 @@ export default function AddProductMain() {
       const message = toast.loading("Uploading image...");
       try {
         const response = await fetch(
-          `http://localhost:7000/admin/products/upload/image`,
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}admin/products/upload/image`,
           {
             method: "POST",
             body: formData,

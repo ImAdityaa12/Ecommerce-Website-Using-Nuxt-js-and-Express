@@ -34,7 +34,7 @@ export default function CommandSearch() {
   async function searchProducts(value: string) {
     try {
       const response = await fetch(
-        `http://localhost:7000/products/shop/search?q=${value}`
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}products/shop/search?q=${value}`
       );
       const data: product[] = await response.json();
       setSearchData(data);

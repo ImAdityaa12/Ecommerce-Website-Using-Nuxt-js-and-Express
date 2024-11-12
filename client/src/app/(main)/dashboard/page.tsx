@@ -8,7 +8,9 @@ export default function DashboardPage() {
   const { products, setProducts } = useProductStore();
   const getProducts = useCallback(async () => {
     try {
-      const response = await fetch("http://localhost:7000/products/shop");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}products/shop`
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

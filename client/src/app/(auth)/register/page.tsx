@@ -53,7 +53,7 @@
 //       const message = toast.loading("Uploading image...");
 //       try {
 //         const response = await fetch(
-//           `http://localhost:7000/admin/products/upload/image`,
+//           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}admin/products/upload/image`,
 //           {
 //             method: "POST",
 //             body: formData,
@@ -248,22 +248,25 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: FormData) => {
     // console.log(data, image);
-    const response = await fetch("http://localhost:7000/users/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName: data.userName,
-        email: data.email,
-        password: data.password,
-        image: image || null,
-        role: "user",
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-      }),
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}users/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userName: data.userName,
+          email: data.email,
+          password: data.password,
+          image: image || null,
+          role: "user",
+          name: data.name,
+          phoneNumber: data.phoneNumber,
+        }),
+        credentials: "include",
+      }
+    );
     const responsejson = await response.json();
     if (response.status === 201) {
       toast.success(responsejson?.message);
@@ -300,7 +303,7 @@ export default function RegisterForm() {
       const message = toast.loading("Uploading image...");
       try {
         const response = await fetch(
-          `http://localhost:7000/admin/products/upload/image`,
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}admin/products/upload/image`,
           {
             method: "POST",
             body: formData,

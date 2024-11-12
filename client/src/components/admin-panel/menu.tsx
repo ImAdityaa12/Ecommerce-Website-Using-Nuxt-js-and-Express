@@ -27,7 +27,7 @@ export function Menu({ isOpen }: MenuProps) {
   const menuList = getMenuList(pathname);
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:7000/users/logout", {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}users/logout`, {
         method: "GET",
         credentials: "include",
       });

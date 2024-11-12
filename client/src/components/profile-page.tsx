@@ -140,7 +140,7 @@ function AddressCard({ address }: { address: Address }) {
   const deleteAddress = async (id: string) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/users/address/delete/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}users/address/delete/${id}`,
         {
           method: "DELETE",
           credentials: "include",

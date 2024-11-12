@@ -30,7 +30,7 @@ export default function ProductCard({
     const token = getCookie("token");
     try {
       const response = await fetch(
-        `http://localhost:7000/products/shop/save/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}products/shop/save/${id}`,
         {
           method: "GET",
           headers: {
@@ -53,7 +53,7 @@ export default function ProductCard({
     const token = getCookie("token");
     try {
       const response = await fetch(
-        "http://localhost:7000/user/cart/addToCart",
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}user/cart/addToCart`,
         {
           method: "POST",
           headers: {

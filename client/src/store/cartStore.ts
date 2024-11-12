@@ -37,14 +37,17 @@ const useCartStore = create<CartStore>((set, get) => ({
   getCartItems: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await fetch("http://localhost:7000/user/cart/", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getCookie("token")}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}user/cart`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getCookie("token")}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch cart items");
@@ -65,7 +68,7 @@ const useCartStore = create<CartStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await fetch(
-        `http://localhost:7000/user/cart/updateCartItemQuantity`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}user/cart/updateCartItemQuantity`,
         {
           method: "POST",
           credentials: "include",
@@ -96,7 +99,7 @@ const useCartStore = create<CartStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await fetch(
-        `http://localhost:7000/user/cart/deleteCartItem`,
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}user/cart/deleteCartItem`,
         {
           method: "DELETE",
           credentials: "include",
