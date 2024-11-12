@@ -16,11 +16,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import userDetailsStore from "@/store/userDetail";
 import AddAddressModal from "@/components/add-address-modal";
+import useCartStore from "@/store/cartStore";
+import { toast } from "sonner";
 export default function CheckoutPage() {
   const [products, setProducts] = useState<CartProduct[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const [isNewAddressModalOpen, setIsNewAddressModalOpen] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
   const { addresses, getUserAddress } = userDetailsStore();
+  const { cartId } = useCartStore();
   const handleAddressSelect = (addressId: string) => {
     setSelectedAddress(addressId);
   };
@@ -70,6 +74,37 @@ export default function CheckoutPage() {
       total + (product.salePrice || product.price) * product.quantity,
     0
   );
+  const createOrder = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}user/order/addOrder`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getCookie("token")}`,
+          },
+          body: JSON.stringify({
+            cartId,
+            addresses: addresses.find(
+              (address) => address._id === selectedAddress
+            ),
+            orderStatus: "In Process",
+            paymentMethod,
+            paymentStatus: "In Process",
+            totalAmount: totalPrice,
+            cartItems: products,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        toast.success("Order Placed Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     getProducts();
     getUserAddress();
@@ -156,7 +191,13 @@ export default function CheckoutPage() {
           </Card>
           <div>
             <h2 className="text-xl font-semibold mb-4">Payment Methods</h2>
-            <Tabs defaultValue="qr" className="w-full">
+            <Tabs
+              defaultValue="qr"
+              className="w-full"
+              onValueChange={(value) => {
+                setPaymentMethod(value);
+              }}
+            >
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger
                   value="qr"
@@ -212,7 +253,11 @@ export default function CheckoutPage() {
                 </div>
               </TabsContent>
             </Tabs>
-            <Button className="w-full mt-6" disabled={!selectedAddress}>
+            <Button
+              className="w-full mt-6"
+              disabled={!selectedAddress}
+              onClick={createOrder}
+            >
               Complete Purchase
             </Button>
           </div>

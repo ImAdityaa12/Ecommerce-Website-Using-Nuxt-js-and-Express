@@ -3,7 +3,7 @@ import { getCookie } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface CartItem {
-  productId: number;
+  productId: string;
   title: string;
   price: number;
   image: string;
