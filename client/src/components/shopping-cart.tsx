@@ -17,10 +17,11 @@ import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const router = useRouter();
-  const { cartItems, getCartItems, updateQuantity, removeItem, cartId } =
+  const { cartItems, getCartItems, updateQuantity, removeItem } =
     useCartStore();
   useEffect(() => {
     getCartItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Sheet>
@@ -96,10 +97,7 @@ export default function Cart() {
               )}
             </span>
           </div>
-          <Button
-            className="w-full"
-            onClick={() => router.push(`/checkout?cartId=${cartId}`)}
-          >
+          <Button className="w-full" onClick={() => router.push("/checkout")}>
             Checkout
           </Button>
         </div>
