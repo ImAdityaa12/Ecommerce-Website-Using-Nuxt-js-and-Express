@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { imageUploadUtil } from "../../utils/cloudinary";
 import productModel from "../../models/productModel";
+import { getCurrentUserId } from "../../utils/currentUserId";
+import orderModel from "../../models/orderModel";
 
 export const getProductsController = async (req: Request, res: Response) => {
   try {
@@ -145,4 +147,13 @@ export const getProductDetailsController = async (
       .status(500)
       .json({ message: "An error occurred while fetching products" });
   }
+};
+
+export const getOrderController = async (req: Request, res: Response) => {
+  try {
+    // const token = req.headers.authorization as string;
+    // const userId = getCurrentUserId(token);
+    const orders = await orderModel.find();
+    res.json({ orders });
+  } catch (error) {}
 };
