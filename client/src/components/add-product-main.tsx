@@ -72,7 +72,7 @@ export default function AddProductMain() {
       const message = toast.loading("Uploading image...");
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}admin/products/upload/image`,
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}upload/image`,
           {
             method: "POST",
             body: formData,

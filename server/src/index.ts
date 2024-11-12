@@ -9,6 +9,8 @@ import orderRouter from "./routes/orderRoutes";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { upload } from "./utils/cloudinary";
+import { handleImageUploadController } from "./controllers/image/uploadImageController";
 dotenv.config();
 mongoose
   .connect(process.env.MONGODB_CONNECTION_STRING as string)
@@ -37,6 +39,7 @@ app.use("/products/shop", productsRoute);
 app.use("/user/cart", cartRouter);
 app.use("/users/address", addressRoute);
 app.use("/user/order", orderRouter);
+app.use("/upload/image", upload.single("image"), handleImageUploadController);
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
