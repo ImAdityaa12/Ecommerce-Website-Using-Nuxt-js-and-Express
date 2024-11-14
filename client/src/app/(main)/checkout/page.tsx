@@ -87,7 +87,7 @@ export default function CheckoutPage() {
           },
           body: JSON.stringify({
             cartId,
-            addresses: addresses.find(
+            address: addresses.find(
               (address) => address._id === selectedAddress
             ),
             orderStatus: "In Process",

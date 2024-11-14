@@ -1,5 +1,6 @@
+"use client";
 import Image from "next/image";
-import { Heart, ShoppingCart } from "lucide-react";
+import { EditIcon, Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,13 +15,16 @@ import { toast } from "sonner";
 import useProductStore from "@/store/productsStore";
 import { useRouter } from "next/navigation";
 import useCartStore from "@/store/cartStore";
+import ProductEditModal from "./product-edit-modal";
 
 export default function ProductCard({
   product,
   isLiked,
+  isEdit,
 }: {
   product: product;
   isLiked: boolean;
+  isEdit?: boolean;
 }) {
   const categories = product.category.split(",");
   const { toggleLike } = useProductStore();
@@ -88,19 +92,23 @@ export default function ProductCard({
             className="rounded-t-lg object-cover cursor-pointer"
             onClick={() => router.push(`/product/${product._id}`)}
           />
-          <button
-            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
-            onClick={() => addFavoriteItem(product._id)}
-          >
-            <Heart
-              className={cn(
-                "w-5 h-5 text-gray-600 transition-all",
-                isLiked && "text-red-500"
-              )}
-              fill={isLiked ? "red" : "none"}
-            />
-            <span className="sr-only">Add to favorites</span>
-          </button>
+          {isEdit ? (
+            <ProductEditModal product={product} />
+          ) : (
+            <button
+              className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+              onClick={() => addFavoriteItem(product._id)}
+            >
+              <Heart
+                className={cn(
+                  "w-5 h-5 text-gray-600 transition-all",
+                  isLiked && "text-red-500"
+                )}
+                fill={isLiked ? "red" : "none"}
+              />
+              <span className="sr-only">Add to favorites</span>
+            </button>
+          )}
         </div>
       </CardHeader>
       <CardContent className="flex-grow p-4">
