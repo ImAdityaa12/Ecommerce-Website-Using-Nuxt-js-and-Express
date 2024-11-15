@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { EditIcon, Heart, ShoppingCart } from "lucide-react";
+import { EditIcon, Heart, ShoppingCart, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -93,7 +93,7 @@ export default function ProductCard({
             onClick={() => router.push(`/product/${product._id}`)}
           />
           {isEdit ? (
-            <ProductEditModal product={product} />
+            <X />
           ) : (
             <button
               className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
@@ -142,10 +142,14 @@ export default function ProductCard({
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" onClick={() => addToCart(product)}>
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          Add to Cart
-        </Button>
+        {isEdit ? (
+          <ProductEditModal product={product} />
+        ) : (
+          <Button className="w-full" onClick={() => addToCart(product)}>
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Add to Cart
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

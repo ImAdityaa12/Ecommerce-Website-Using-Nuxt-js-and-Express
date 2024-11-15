@@ -107,8 +107,8 @@ export default function ProductEditModal({ product }: { product: product }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="absolute top-2 right-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors w-10 h-10">
-          <EditIcon className="w-5 h-5 text-black" />
+        <Button className="w-full">
+          Edit <EditIcon className="w-5 h-5 text-black" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
