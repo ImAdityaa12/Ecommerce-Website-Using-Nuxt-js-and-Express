@@ -1,8 +1,30 @@
 <template>
+  <div>
+    <div>
+      <div>
+        <div>women</div>
+        <div>men</div>
+        <div>kids</div>
+      </div>
+
+      <div>
+        <div>
+          <MapPin />
+
+          india <ChevronDown />
+        </div>
+        <div>TRACK ORDER</div>
+        <div>CONTACT US</div>
+        <div><Smartphone /> DOWNLOAD APP</div>
+      </div>
+    </div>
+  </div>
+
   <div class="" @click="handleLogout">Logout</div>
 </template>
 <script setup>
 import { useStore } from "~/stores/store";
+import { MapPin, ChevronDown, Smartphone } from "lucide-vue-next";
 
 import { useRouter } from "vue-router";
 import { onMounted } from "vue";

@@ -1,57 +1,73 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-background p-4">
-    <Card class="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription
-          >Enter your details below to create your account</CardDescription
+  <div
+    class="font-sour-gummy relative h-screen w-screen flex items-center justify-start"
+  >
+    <img
+      class="w-full h-full absolute object-fill"
+      src="../../assets/css/images/bg.jpg"
+      alt="Background Image"
+    />
+    <div
+      class="bg-white m-8 p-4 gap-4 h-[90%] rounded-3xl absolute flex flex-col items-center w-1/3 z-10"
+    >
+      <h1
+        class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 shadow-xl shadow-black/50 rounded-lg p-2 m-6 text-7xl text-gradient animate-bounce transform skew-x-12"
+      >
+        ChicMart
+      </h1>
+      <h2
+        class="text-5xl from-green-400 via-blue-500 to-purple-600 text-center font-bold"
+      >
+        Sign Up and buy free
+      </h2>
+      <div class="flex flex-col gap-1 w-2/3">
+        <input
+          v-model="formData.username"
+          class="border-2 border-purple-200 hover:border-purple-600 p-4 rounded-full"
+          type="text"
+          placeholder="username"
+        />
+        <input
+          v-model="formData.email"
+          class="border-2 border-purple-200 hover:border-purple-600 p-4 rounded-full"
+          type="email"
+          placeholder="email"
+        />
+        <input
+          v-model="formData.password"
+          class="border-2 border-purple-200 hover:border-purple-600 p-4 rounded-full"
+          type="password"
+          placeholder="password "
+        />
+      </div>
+
+      <div class="flex flex-col w-full items-center justify-center">
+        <div class="flex gap-2 p-2 items-center">
+          <input type="checkbox" /> I accept terms and conditions
+        </div>
+        <button
+          @click="registerUser"
+          class="bg-purple-500 hover:bg-purple-700 h-10 w-2/3 rounded-full text-white font-bold"
         >
-      </CardHeader>
-      <CardContent>
-        <form class="space-y-4">
-          <div class="space-y-2">
-            <Label for="username">Username</Label>
-            <Input
-              id="username"
-              v-model="formData.username"
-              type="text"
-              placeholder="Enter your username"
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="email">Email</Label>
-            <Input
-              id="email"
-              v-model="formData.email"
-              type="email"
-              placeholder="Enter your email"
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="password">Password</Label>
-            <Input
-              id="password"
-              v-model="formData.password"
-              type="password"
-              placeholder="Enter your password"
-            />
-          </div>
-          <Button class="w-full" @click="registerUser">Register</Button>
-        </form>
-      </CardContent>
-    </Card>
+          Sign Up
+        </button>
+        <p>or</p>
+
+        <button>Continue with Google</button>
+        <div>
+          Already have an account?
+          <NuxtLink to="/login"
+            ><span class="text-purple-950 font-bold hover:text-purple-500"
+              >log in</span
+            ></NuxtLink
+          >
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import Card from "~/components/ui/card/Card.vue";
-import CardContent from "~/components/ui/card/CardContent.vue";
-import CardDescription from "~/components/ui/card/CardDescription.vue";
-import CardHeader from "~/components/ui/card/CardHeader.vue";
-import CardTitle from "~/components/ui/card/CardTitle.vue";
-import Input from "~/components/ui/input/Input.vue";
-import Label from "~/components/ui/label/Label.vue";
-import Button from "~/components/ui/button/Button.vue";
 import { useToast } from "@/components/ui/toast/use-toast";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
