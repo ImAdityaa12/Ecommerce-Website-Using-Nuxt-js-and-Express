@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import addressModel from "../models/addressModel";
+import { getCurrentUserId } from "../utils/currentUserId";
 export const addAddressController = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const { userId, address, city, pincode, phone, notes } = req.body;
-    if (!userId || !address || !city || !pincode || !phone) {
+    const userId = getCurrentUserId(req.headers.authorization as string);
+    const { address, city, pincode, phone, notes } = req.body;
+    if (!address || !city || !pincode || !phone) {
       res.status(400).json("Missing required fields");
       return;
     }
@@ -76,8 +78,10 @@ export const fetchAllAddressController = async (
   res: Response
 ) => {
   try {
-    const { userId } = req.params;
-    const address = await addressModel.find({ userId: userId });
+    const token = req.headers.authorization;
+    const address = await addressModel.find({
+      userId: getCurrentUserId(token as string),
+    });
     if (!address) {
       res.status(404).json("Address not found");
       return;

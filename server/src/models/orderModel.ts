@@ -6,8 +6,9 @@ const orderSchema = new mongoose.Schema({
     {
       productId: String,
       title: String,
-      image: String,
       price: String,
+      image: String,
+      salePrice: Number,
       quantity: Number,
     },
   ],
@@ -23,11 +24,14 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: String,
   paymentStatus: String,
   totalAmount: Number,
-  orderDate: Date,
-  orderUpdateDate: Date,
+  orderDate: {
+    type: Date,
+    default: Date.now,
+  },
+  // orderUpdateDate: Date,
   cartId: String,
-  paymentId: String,
-  payerId: String,
+  // paymentId: String,
+  // payerId: String,
 });
 
 export default mongoose.model("Order", orderSchema);
