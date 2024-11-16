@@ -20,8 +20,9 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { product } from "@/product";
-import { EditIcon } from "lucide-react";
+import { EditIcon, X } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function ProductEditModal({ product }: { product: product }) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -120,15 +121,32 @@ export default function ProductEditModal({ product }: { product: product }) {
             <Label htmlFor="image" className="text-right">
               Image
             </Label>
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={handleInputChange}
-              className="col-span-3"
-            />
+            {imagePreview ? (
+              <div className="relative w-full h-full">
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  width={100}
+                  height={100}
+                  className="mt-2"
+                />
+                <X
+                  className="absolute top-2 -right-10 cursor-pointer text-red-500 bg-white rounded-full hover:bg-red-100"
+                  onClick={() => setImagePreview(null)}
+                />
+              </div>
+            ) : (
+              <Input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="col-span-3"
+              />
+            )}
           </div>
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="title" className="text-right">
               Title

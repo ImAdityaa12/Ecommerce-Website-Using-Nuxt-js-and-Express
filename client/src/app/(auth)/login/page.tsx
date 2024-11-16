@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Eye, EyeOff, Github, Loader, LogIn } from "lucide-react";
 import { toast } from "sonner";
+import { setCookie } from "@/lib/cookieFunction";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,6 +49,8 @@ export default function LoginPage() {
     );
     const data = await response.json();
     if (response.status === 200) {
+      console.log(data?.token);
+      setCookie("token", data?.token);
       toast.success(data?.message);
       setIsLoading(false);
       router.push("/dashboard");
